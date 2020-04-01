@@ -1,0 +1,6 @@
+title = 'Minecraft 2D'
+scaling = 1.6
+
+[window_size]
+x = 1280
+y = 720
