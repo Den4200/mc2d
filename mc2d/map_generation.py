@@ -1,12 +1,9 @@
-import itertools
-
 import arcade
 
 from mc2d.config import (
     GRASS,
     SCALING,
     TILE_SIZE,
-    WINDOW_SIZE
 )
 
 
@@ -19,19 +16,14 @@ class Map:
     def setup(self):
         self.ctx.ground_list = arcade.SpriteList()
 
-        ground_cycle = itertools.cycle(self.ground_idxs)
-
-        for cycle_idx, x in zip(
-            ground_cycle, range(0, int((WINDOW_SIZE[0] + TILE_SIZE) / SCALING), TILE_SIZE)
-        ):
-            sprite = arcade.Sprite(
-                str(GRASS / f'grass_{cycle_idx}.png'),
-                scale=SCALING,
-                center_x=x * SCALING,
-                center_y=TILE_SIZE * SCALING // 2
-            )
-            sprite._cycle_idx = cycle_idx
-            self.ctx.ground_list.append(sprite)
+        sprite = arcade.Sprite(
+            str(GRASS / 'grass_1.png'),
+            scale=SCALING,
+            center_x=0,
+            center_y=TILE_SIZE * SCALING // 2
+        )
+        sprite._cycle_idx = 1
+        self.ctx.ground_list.append(sprite)
 
     def update(self, **viewport):
         ground_list = self.ctx.ground_list
