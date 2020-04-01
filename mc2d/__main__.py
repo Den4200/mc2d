@@ -5,9 +5,11 @@ import arcade
 from mc2d.constants import (
     TITLE,
     WINDOW_SIZE,
+    PLAYER_SIZE,
     TILE_SIZE,
     SCALING,
-    GRASS
+    GRASS,
+    PLAYER
 )
 
 
@@ -16,11 +18,18 @@ class Mc2d(arcade.Window):
     def __init__(self) -> None:
         super().__init__(*WINDOW_SIZE, TITLE)
 
+        self.player = None
         self.ground_list = None
 
         arcade.set_background_color(arcade.csscolor.CORNFLOWER_BLUE)
 
     def setup(self):
+        self.player = arcade.Sprite(
+            str(PLAYER / 'idle.png'),
+            scale=SCALING,
+            center_x=PLAYER_SIZE[0] * SCALING,
+            center_y=PLAYER_SIZE[1] * SCALING // 2 + TILE_SIZE * SCALING
+        )
         self.ground_list = arcade.SpriteList()
 
         ground_cycle = itertools.cycle(
@@ -40,6 +49,7 @@ class Mc2d(arcade.Window):
     def on_draw(self):
         arcade.start_render()
 
+        self.player.draw()
         self.ground_list.draw()
 
 
