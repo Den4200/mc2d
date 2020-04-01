@@ -4,7 +4,7 @@ import arcade
 
 from mc2d.constants import (
     TITLE,
-    SCREEN_SIZE,
+    WINDOW_SIZE,
     TILE_SIZE,
     SCALING,
     GRASS
@@ -14,7 +14,7 @@ from mc2d.constants import (
 class Mc2d(arcade.Window):
 
     def __init__(self) -> None:
-        super().__init__(*SCREEN_SIZE, TITLE)
+        super().__init__(*WINDOW_SIZE, TITLE)
 
         self.ground_list = None
 
@@ -27,7 +27,7 @@ class Mc2d(arcade.Window):
             str(GRASS / f'grass_{i}.png') for i in range(1, 4)
         )
 
-        for x in range(0, SCREEN_SIZE[0] + TILE_SIZE, TILE_SIZE):
+        for x in range(0, int((WINDOW_SIZE[0] + TILE_SIZE) / SCALING), TILE_SIZE):
             self.ground_list.append(
                 arcade.Sprite(
                     next(ground_cycle),
