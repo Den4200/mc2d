@@ -4,3 +4,9 @@ scaling = 1.6
 [window_size]
 x = 1280
 y = 720
+
+[viewport]
+top = 100
+bottom = 50
+left = 500
+right = 500
