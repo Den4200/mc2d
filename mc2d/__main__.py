@@ -95,6 +95,13 @@ class Mc2d(arcade.Window):
             self.view_bottom = int(self.view_bottom)
             self.view_left = int(self.view_left)
 
+            self.map.update(
+                left=self.view_left,
+                right=WINDOW_SIZE[0] + self.view_left,
+                bottom=self.view_bottom,
+                top=WINDOW_SIZE[1] + self.view_bottom
+            )
+
             arcade.set_viewport(
                 self.view_left,
                 WINDOW_SIZE[0] + self.view_left,
