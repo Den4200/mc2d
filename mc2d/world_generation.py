@@ -7,7 +7,7 @@ from mc2d.config import (
 )
 
 
-class Map:
+class World:
 
     def __init__(self, ctx):
         self.ctx = ctx
@@ -39,7 +39,7 @@ class Map:
             sprite._cycle_idx = idx
             ground_list.insert(0, sprite)
 
-        if ground_list[-1].right < viewport['right']:
+        elif ground_list[-1].right < viewport['right']:
             idx = self.ground_idxs[ground_list[-1]._cycle_idx % 3]
             sprite = arcade.Sprite(
                 str(GRASS / f'grass_{idx}.png'),
@@ -49,3 +49,11 @@ class Map:
             )
             sprite._cycle_idx = idx
             ground_list.append(sprite)
+
+        if ground_list[0].left + TILE_SIZE * SCALING < viewport['left']:
+            ground_list.pop(0)
+
+        elif ground_list[-1].right - TILE_SIZE * SCALING > viewport['right']:
+            ground_list.pop(-1)
+
+        print(len(ground_list))

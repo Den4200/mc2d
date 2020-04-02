@@ -1,6 +1,7 @@
 import arcade
 
-from mc2d.map_generation import Map
+from mc2d.player import Player
+from mc2d.world_generation import World
 from mc2d.config import (
     GRAVITY,
     PLAYER,
@@ -20,7 +21,7 @@ class Mc2d(arcade.Window):
     def __init__(self) -> None:
         super().__init__(*WINDOW_SIZE, TITLE)
 
-        self.map = None
+        self.world = None
         self.player = None
         self.ground_list = None
 
@@ -32,15 +33,15 @@ class Mc2d(arcade.Window):
         arcade.set_background_color(arcade.csscolor.CORNFLOWER_BLUE)
 
     def setup(self):
-        self.player = arcade.Sprite(
+        self.player = Player(
             str(PLAYER / 'idle.png'),
             scale=SCALING,
             center_x=PLAYER_SIZE[0] * SCALING,
             center_y=PLAYER_SIZE[1] * SCALING // 2 + TILE_SIZE * SCALING
         )
 
-        self.map = Map(self)
-        self.map.setup()
+        self.world = World(self)
+        self.world.setup()
 
         self.physics_engine = arcade.PhysicsEnginePlatformer(
             self.player, self.ground_list, GRAVITY
@@ -95,7 +96,7 @@ class Mc2d(arcade.Window):
             self.view_bottom = int(self.view_bottom)
             self.view_left = int(self.view_left)
 
-            self.map.update(
+            self.world.update(
                 left=self.view_left,
                 right=WINDOW_SIZE[0] + self.view_left,
                 bottom=self.view_bottom,
