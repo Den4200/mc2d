@@ -49,5 +49,5 @@ class Grid:
             if len(self.boxes) > 1:
                 self.boxes.pop(0)
 
-            self.ctx.world.check_block(left_x, bottom_y, self.selection[2])
+            self.ctx.world.check_block(center_x, center_y, self.selection[2])
             self.selection = None

@@ -29,21 +29,24 @@ class World:
     def draw(self):
         self.block_list.draw()
 
-    def check_block(self, left_x, bottom_y, button):
-        for block in self.block_list:
-            if (
-                left_x < block.center_x < left_x + int(TILE_SIZE * SCALING) and
-                bottom_y < block.center_y < bottom_y + int(TILE_SIZE * SCALING)
-            ):
-                return
+    def check_block(self, center_x, center_y, button):
+        if button == arcade.MOUSE_BUTTON_LEFT:
+            for block in self.block_list:
+                if block.center_x == center_x and block.center_y == center_y:
+                    self.block_list.remove(block)
+                    return
 
         if button == arcade.MOUSE_BUTTON_RIGHT:
+            for block in self.block_list:
+                if block.center_x == center_x and block.center_y == center_y:
+                    return
+
             self.block_list.append(
                 arcade.Sprite(
                     str(GRASS / 'grass_2.png'),  # placeholder until inventory system
                     scale=SCALING,
-                    center_x=left_x + (TILE_SIZE * SCALING) // 2,
-                    center_y=bottom_y + (TILE_SIZE * SCALING) // 2
+                    center_x=center_x,
+                    center_y=center_y
                 )
             )
 
