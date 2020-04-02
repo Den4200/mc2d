@@ -1,6 +1,7 @@
 import arcade
 
 from mc2d.player import Player
+from mc2d.grid import Grid
 from mc2d.world_generation import World
 from mc2d.config import (
     GRAVITY,
@@ -22,6 +23,7 @@ class Mc2d(arcade.Window):
         super().__init__(*WINDOW_SIZE, TITLE)
 
         self.world = None
+        self.grid = None
         self.player = None
 
         self.physics_engine = None
@@ -39,8 +41,11 @@ class Mc2d(arcade.Window):
             center_y=PLAYER_SIZE[1] * SCALING // 2 + TILE_SIZE * SCALING
         )
 
-        self.world = World(self)
+        self.world = World()
         self.world.setup()
+
+        self.grid = Grid()
+        self.grid.setup()
 
         self.physics_engine = arcade.PhysicsEnginePlatformer(
             self.player, self.world.ground_list, GRAVITY
@@ -51,6 +56,7 @@ class Mc2d(arcade.Window):
 
         self.player.draw()
         self.world.draw()
+        self.grid.draw()
 
     def on_key_press(self, key, modifiers):
         if key == arcade.key.SPACE and self.physics_engine.can_jump():
@@ -68,7 +74,7 @@ class Mc2d(arcade.Window):
 
     def on_mouse_press(self, x, y, button, modifiers):
         if button == arcade.MOUSE_BUTTON_LEFT:
-            self.world.box_chosen_coords = (x, y)
+            self.grid.selection = (x, y)
 
     def on_update(self, delta_time):
         self.physics_engine.update()
@@ -112,3 +118,10 @@ class Mc2d(arcade.Window):
                 self.view_bottom,
                 WINDOW_SIZE[1] + self.view_bottom
             )
+
+        self.grid.update(
+            left=self.view_left,
+            right=WINDOW_SIZE[0] + self.view_left,
+            bottom=self.view_bottom,
+            top=WINDOW_SIZE[1] + self.view_bottom
+        )
