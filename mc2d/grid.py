@@ -22,12 +22,18 @@ class Grid:
 
     def update(self, **viewport):
         if self.selection is not None:
+            center_x = self.selection[0] + viewport['left']
+            center_y = self.selection[1] + viewport['bottom']
+
+            left_x = center_x - (center_x % int(TILE_SIZE * SCALING))
+            bottom_y = center_y - (center_y % int(TILE_SIZE * SCALING))
+
             self.boxes.append(
                 arcade.Sprite(
                     str(SELECTION_BOX),
                     scale=SCALING,
-                    center_x=self.selection[0] + viewport['left'],
-                    center_y=self.selection[1] + viewport['bottom']
+                    center_x=left_x + (TILE_SIZE * SCALING) // 2,
+                    center_y=bottom_y + (TILE_SIZE * SCALING) // 2
                 )
             )
             self.selection = None
