@@ -41,14 +41,14 @@ class Mc2d(arcade.Window):
             center_y=PLAYER_SIZE[1] * SCALING // 2 + TILE_SIZE * SCALING
         )
 
-        self.world = World()
+        self.world = World(self)
         self.world.setup()
 
-        self.grid = Grid()
+        self.grid = Grid(self)
         self.grid.setup()
 
         self.physics_engine = arcade.PhysicsEnginePlatformer(
-            self.player, self.world.ground_list, GRAVITY
+            self.player, self.world.block_list, GRAVITY
         )
 
     def on_draw(self):
@@ -73,8 +73,8 @@ class Mc2d(arcade.Window):
             self.player.change_x = 0
 
     def on_mouse_press(self, x, y, button, modifiers):
-        if button == arcade.MOUSE_BUTTON_LEFT:
-            self.grid.selection = (x, y)
+        if button in (arcade.MOUSE_BUTTON_LEFT, arcade.MOUSE_BUTTON_RIGHT):
+            self.grid.selection = (x, y, button)
 
     def on_update(self, delta_time):
         self.physics_engine.update()

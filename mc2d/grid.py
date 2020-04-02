@@ -3,14 +3,14 @@ import arcade
 from mc2d.config import (
     SELECTION_BOX,
     SCALING,
-    TILE_SIZE,
-    WINDOW_SIZE
+    TILE_SIZE
 )
 
 
 class Grid:
 
-    def __init__(self):
+    def __init__(self, ctx):
+        self.ctx = ctx
         self.selection = None
         self.boxes = arcade.SpriteList()
 
@@ -36,7 +36,9 @@ class Grid:
                     center_y=bottom_y + (TILE_SIZE * SCALING) // 2
                 )
             )
-            self.selection = None
 
             if len(self.boxes) > 1:
                 self.boxes.pop(0)
+
+            self.ctx.world.check_block(left_x, bottom_y, self.selection[2])
+            self.selection = None
