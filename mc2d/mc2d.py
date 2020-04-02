@@ -23,7 +23,6 @@ class Mc2d(arcade.Window):
 
         self.world = None
         self.player = None
-        self.ground_list = None
 
         self.physics_engine = None
 
@@ -44,14 +43,14 @@ class Mc2d(arcade.Window):
         self.world.setup()
 
         self.physics_engine = arcade.PhysicsEnginePlatformer(
-            self.player, self.ground_list, GRAVITY
+            self.player, self.world.ground_list, GRAVITY
         )
 
     def on_draw(self):
         arcade.start_render()
 
         self.player.draw()
-        self.ground_list.draw()
+        self.world.draw()
 
     def on_key_press(self, key, modifiers):
         if key == arcade.key.SPACE and self.physics_engine.can_jump():
@@ -66,6 +65,10 @@ class Mc2d(arcade.Window):
     def on_key_release(self, key, modifiers):
         if key in (arcade.key.A, arcade.key.D):
             self.player.change_x = 0
+
+    def on_mouse_press(self, x, y, button, modifiers):
+        if button == arcade.MOUSE_BUTTON_LEFT:
+            self.world.box_chosen_coords = (x, y)
 
     def on_update(self, delta_time):
         self.physics_engine.update()

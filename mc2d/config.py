@@ -24,3 +24,5 @@ PLAYER_JUMP_SPEED = 10
 ASSETS = Path('assets')
 GRASS = ASSETS / 'grass'
 PLAYER = ASSETS / 'player'
+
+SELECTION_BOX = ASSETS / 'selection_box.png'
