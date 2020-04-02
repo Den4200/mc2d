@@ -28,12 +28,21 @@ class Grid:
             left_x = center_x - (center_x % int(TILE_SIZE * SCALING))
             bottom_y = center_y - (center_y % int(TILE_SIZE * SCALING))
 
+            center_x = left_x + (TILE_SIZE * SCALING) // 2
+            center_y = bottom_y + (TILE_SIZE * SCALING) // 2
+
+            if len(self.boxes) > 0:
+                if self.boxes[0].center_x == center_x and self.boxes[0].center_y == center_y:
+                    self.boxes.pop(0)
+                    self.selection = None
+                    return
+
             self.boxes.append(
                 arcade.Sprite(
                     str(SELECTION_BOX),
                     scale=SCALING,
-                    center_x=left_x + (TILE_SIZE * SCALING) // 2,
-                    center_y=bottom_y + (TILE_SIZE * SCALING) // 2
+                    center_x=center_x,
+                    center_y=center_y
                 )
             )
 

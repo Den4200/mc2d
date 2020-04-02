@@ -30,7 +30,7 @@ class World:
         self.block_list.draw()
 
     def check_block(self, left_x, bottom_y, button):
-        for block in self.ground_list:
+        for block in self.block_list:
             if (
                 left_x < block.center_x < left_x + int(TILE_SIZE * SCALING) and
                 bottom_y < block.center_y < bottom_y + int(TILE_SIZE * SCALING)
