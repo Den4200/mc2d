@@ -18,10 +18,12 @@ class Player(arcade.Sprite):
         self.button = None
 
         self.prev_coords = None
+        self.path_attempted = False
 
     def update(self):
         if self.destination is not None and self.button is not None:
-            half_tile = int(TILE_SIZE * SCALING) // 2
+            scaled_tile = int(TILE_SIZE * SCALING)
+            half_tile = scaled_tile // 2
 
             if self.prev_coords is not None:
                 prev_x, prev_y = find_grid_box(*self.prev_coords)
@@ -32,16 +34,21 @@ class Player(arcade.Sprite):
                         self.change_y = PLAYER_JUMP_SPEED
                         self.path_attempted = True
                         self.is_jumping = True
+
                     else:
                         self.reset()
 
             if self.destination is not None:
 
-                if (
-                    self.destination[0] - half_tile < self.center_x < self.destination[0] + half_tile
-                    and
-                    self.destination[1] - half_tile < self.center_y < self.destination[1] + half_tile
-                ):
+                if self.ctx.world.is_block_here(*self.destination[:2]) or self.button == arcade.MOUSE_BUTTON_RIGHT:
+                    tile = scaled_tile
+                else:
+                    tile = half_tile
+
+                if all((
+                    self.destination[0] - tile < self.center_x < self.destination[0] + tile,
+                    self.destination[1] - tile < self.center_y < self.destination[1] + tile
+                )):
                     self.reset()
 
                 else:
@@ -57,7 +64,8 @@ class Player(arcade.Sprite):
         self.change_y = 0
 
         self.ctx.grid.should_not_check = True
-        self.ctx.grid.selection = (*self.destination[3:], self.button)
+        self.ctx.world.change_block(*self.destination[:2], self.button, **self.destination[-1])
+        self.ctx.grid.selection = (*self.destination[3:-1], self.button)
 
         self.button = None
         self.destination = None

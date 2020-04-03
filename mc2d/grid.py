@@ -48,7 +48,8 @@ class Grid:
                 self.boxes.pop(0)
 
             if not self.should_not_check:
-                self.ctx.world.check_block(*self.selection, **viewport)
+                self.ctx.player.destination = (center_x, center_y, *self.selection, viewport)
+                self.ctx.player.button = self.selection[2]
             else:
                 self.should_not_check = False
 
