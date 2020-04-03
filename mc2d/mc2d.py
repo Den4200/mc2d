@@ -2,12 +2,10 @@ import arcade
 
 from mc2d.player import Player
 from mc2d.grid import Grid
-from mc2d.world_generation import World
+from mc2d.world import World
 from mc2d.config import (
     GRAVITY,
     PLAYER,
-    PLAYER_JUMP_SPEED,
-    PLAYER_MOVEMENT_SPEED,
     PLAYER_SIZE,
     SCALING,
     TILE_SIZE,

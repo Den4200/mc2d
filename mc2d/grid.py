@@ -1,10 +1,6 @@
 import arcade
 
-from mc2d.config import (
-    SELECTION_BOX,
-    SCALING,
-    TILE_SIZE
-)
+from mc2d.config import SCALING, SELECTION_BOX
 from mc2d.utils import find_grid_box
 
 
