@@ -35,6 +35,7 @@ class Mc2d(arcade.Window):
 
     def setup(self):
         self.player = Player(
+            self,
             str(PLAYER / 'idle.png'),
             scale=SCALING,
             center_x=PLAYER_SIZE[0] * SCALING,
@@ -58,26 +59,13 @@ class Mc2d(arcade.Window):
         self.world.draw()
         self.grid.draw()
 
-    def on_key_press(self, key, modifiers):
-        if key == arcade.key.SPACE and self.physics_engine.can_jump():
-            self.player.change_y = PLAYER_JUMP_SPEED
-
-        if key == arcade.key.A:
-            self.player.change_x = -PLAYER_MOVEMENT_SPEED
-
-        if key == arcade.key.D:
-            self.player.change_x = PLAYER_MOVEMENT_SPEED
-
-    def on_key_release(self, key, modifiers):
-        if key in (arcade.key.A, arcade.key.D):
-            self.player.change_x = 0
-
     def on_mouse_press(self, x, y, button, modifiers):
         if button in (arcade.MOUSE_BUTTON_LEFT, arcade.MOUSE_BUTTON_RIGHT):
             self.grid.selection = (x, y, button)
 
     def on_update(self, delta_time):
         self.physics_engine.update()
+        self.player.update()
 
         changed = False
 

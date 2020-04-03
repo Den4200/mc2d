@@ -5,6 +5,7 @@ from mc2d.config import (
     SCALING,
     TILE_SIZE
 )
+from mc2d.utils import find_grid_box
 
 
 class World:
@@ -29,26 +30,35 @@ class World:
     def draw(self):
         self.block_list.draw()
 
-    def check_block(self, center_x, center_y, button):
+    def check_block(self, center_x, center_y, button, **viewport):
+        selection_x, selection_y = find_grid_box(
+            center_x + viewport['left'],
+            center_y + viewport['bottom']
+        )
+
         if button == arcade.MOUSE_BUTTON_LEFT:
             for block in self.block_list:
-                if block.center_x == center_x and block.center_y == center_y:
+                if block.center_x == selection_x and block.center_y == selection_y:
                     self.block_list.remove(block)
                     return
 
         if button == arcade.MOUSE_BUTTON_RIGHT:
             for block in self.block_list:
-                if block.center_x == center_x and block.center_y == center_y:
+                if block.center_x == selection_x and block.center_y == selection_y:
                     return
 
             self.block_list.append(
                 arcade.Sprite(
                     str(GRASS / 'grass_2.png'),  # placeholder until inventory system
                     scale=SCALING,
-                    center_x=center_x,
-                    center_y=center_y
+                    center_x=selection_x,
+                    center_y=selection_y
                 )
             )
+            return
+
+        self.ctx.player.destination = (selection_x, selection_y, center_x, center_y)
+        self.ctx.player.button = button
 
     def update(self, **viewport):
         if self.ground_list[0].left > viewport['left']:

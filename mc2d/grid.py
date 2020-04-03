@@ -5,6 +5,7 @@ from mc2d.config import (
     SCALING,
     TILE_SIZE
 )
+from mc2d.utils import find_grid_box
 
 
 class Grid:
@@ -12,6 +13,7 @@ class Grid:
     def __init__(self, ctx):
         self.ctx = ctx
         self.selection = None
+        self.should_not_check = False
         self.boxes = arcade.SpriteList()
 
     def draw(self):
@@ -22,19 +24,19 @@ class Grid:
 
     def update(self, **viewport):
         if self.selection is not None:
-            center_x = self.selection[0] + viewport['left']
-            center_y = self.selection[1] + viewport['bottom']
-
-            left_x = center_x - (center_x % int(TILE_SIZE * SCALING))
-            bottom_y = center_y - (center_y % int(TILE_SIZE * SCALING))
-
-            center_x = left_x + (TILE_SIZE * SCALING) // 2
-            center_y = bottom_y + (TILE_SIZE * SCALING) // 2
+            center_x, center_y = find_grid_box(
+                self.selection[0] + viewport['left'],
+                self.selection[1] + viewport['bottom']
+            )
 
             if len(self.boxes) > 0:
                 if self.boxes[0].center_x == center_x and self.boxes[0].center_y == center_y:
                     self.boxes.pop(0)
                     self.selection = None
+
+                    self.ctx.player.button = None
+                    self.ctx.player.destination = None
+                    self.ctx.player.change_x = 0
                     return
 
             self.boxes.append(
@@ -49,5 +51,9 @@ class Grid:
             if len(self.boxes) > 1:
                 self.boxes.pop(0)
 
-            self.ctx.world.check_block(center_x, center_y, self.selection[2])
+            if not self.should_not_check:
+                self.ctx.world.check_block(*self.selection, **viewport)
+            else:
+                self.should_not_check = False
+
             self.selection = None
