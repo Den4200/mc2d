@@ -18,7 +18,7 @@ class Player(arcade.Sprite):
         self.button = None
 
         self.prev_coords = None
-        self.path_attempted = False
+        self.just_started = True
 
     def update(self):
         if self.destination is not None and self.button is not None:
@@ -30,10 +30,12 @@ class Player(arcade.Sprite):
 
                 if self.center_x == self.prev_coords[0] and self.center_y == self.prev_coords[1]:
 
-                    if self.ctx.physics_engine.can_jump():
+                    if self.ctx.physics_engine.can_jump() and not self.just_started:
                         self.change_y = PLAYER_JUMP_SPEED
-                        self.path_attempted = True
                         self.is_jumping = True
+
+                    elif self.just_started:
+                        self.just_started = False
 
                     else:
                         self.reset()
@@ -70,3 +72,4 @@ class Player(arcade.Sprite):
         self.button = None
         self.destination = None
         self.prev_coords = None
+        self.just_started = True
