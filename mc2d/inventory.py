@@ -43,7 +43,7 @@ class Inventory(arcade.Sprite):
             center_y=self.top + 12 - int(TILE_SIZE * SCALING * 5) - (4 * 13)
         )
         sprite.name = 'grass'
-        sprite.amount = 4
+        sprite.amount = 16
         self.inv_sprites.append(sprite)
 
     def draw(self):

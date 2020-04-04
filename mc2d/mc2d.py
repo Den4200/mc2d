@@ -98,6 +98,13 @@ class Mc2d(arcade.Window):
                 top=WINDOW_SIZE[1] + self.view_bottom
             )
 
+            self.inventory.update_view(
+                left=self.view_left,
+                right=WINDOW_SIZE[0] + self.view_left,
+                bottom=self.view_bottom,
+                top=WINDOW_SIZE[1] + self.view_bottom
+            )
+
             arcade.set_viewport(
                 self.view_left,
                 WINDOW_SIZE[0] + self.view_left,
@@ -106,13 +113,6 @@ class Mc2d(arcade.Window):
             )
 
         self.grid.update(
-            left=self.view_left,
-            right=WINDOW_SIZE[0] + self.view_left,
-            bottom=self.view_bottom,
-            top=WINDOW_SIZE[1] + self.view_bottom
-        )
-
-        self.inventory.update_view(
             left=self.view_left,
             right=WINDOW_SIZE[0] + self.view_left,
             bottom=self.view_bottom,
