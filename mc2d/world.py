@@ -46,22 +46,24 @@ class World:
 
                     if self.ctx.player.update_inventory(block, 'ADD'):
                         self.block_list.remove(block)
-                    return
 
-        if button == arcade.MOUSE_BUTTON_RIGHT:
+                    break
+
+        elif button == arcade.MOUSE_BUTTON_RIGHT:
 
             for block in self.block_list:
-                if block.center_x == center_x and block.center_y == center_y:
+                if (block.center_x == center_x and block.center_y == center_y):
                     return
 
-            sprite = arcade.Sprite(
-                str(GRASS / 'grass_2.png'),  # placeholder until inventory system
-                scale=SCALING,
-                center_x=center_x,
-                center_y=center_y
-            )
-            sprite.name = 'grass'
-            self.block_list.append(sprite)
+            if self.ctx.player.update_inventory(block, 'REMOVE'):
+                sprite = arcade.Sprite(
+                    str(GRASS / 'grass_2.png'),  # placeholder until inventory system
+                    scale=SCALING,
+                    center_x=center_x,
+                    center_y=center_y
+                )
+                sprite.name = 'grass'
+                self.block_list.append(sprite)
 
     def update(self, **viewport):
         self.ctx.inventory_ui.center_x = viewport['right'] - 48

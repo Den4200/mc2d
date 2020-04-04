@@ -1,6 +1,7 @@
 import arcade
 
 from mc2d.config import (
+    GRASS,
     PLAYER_JUMP_SPEED,
     PLAYER_MOVEMENT_SPEED,
     SCALING,
@@ -24,8 +25,7 @@ class Player(arcade.Sprite):
         self.inv_sprites = arcade.SpriteList()
 
     def setup(self):
-        for i in range(5):
-            print(self.ctx.inventory_ui.top + 8 + (TILE_SIZE * SCALING * (i + 1)) // 2)
+        for i in range(4):
             sprite = arcade.Sprite(
                 str(SELECTION_BOX),
                 scale=SCALING,
@@ -35,6 +35,17 @@ class Player(arcade.Sprite):
             sprite.name = 'transparent_block'
             sprite.amount = 0
             self.inv_sprites.append(sprite)
+
+        # here until more advanced map generation
+        sprite = arcade.Sprite(
+            str(SELECTION_BOX),
+            scale=SCALING,
+            center_x=self.ctx.inventory_ui.center_x,
+            center_y=self.ctx.inventory_ui.top + 8 + (TILE_SIZE * SCALING * 5) // 2
+        )
+        sprite.name = 'grass'
+        sprite.amount = 32
+        self.inv_sprites.append(sprite)
 
     def update_inventory(self, block, state):
         if state == 'ADD':
@@ -69,7 +80,9 @@ class Player(arcade.Sprite):
                             center_y=self.ctx.inventory_ui.top + 8 + (TILE_SIZE * SCALING * (idx + 1)) // 2
                         )
                         sprite.name = 'transparent_block'
-                        self.inv_sprites[idx] = sprite
+                        sprite.amount = 0
+                        self.inv_sprites.pop(idx)
+                        self.inv_sprites.insert(idx, sprite)
 
                     return True
 
