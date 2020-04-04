@@ -2,14 +2,10 @@ import arcade
 
 from mc2d.player import Player
 from mc2d.grid import Grid
+from mc2d.inventory import Inventory
 from mc2d.world import World
 from mc2d.config import (
     GRAVITY,
-    INVENTORY,
-    PLAYER,
-    PLAYER_SIZE,
-    SCALING,
-    TILE_SIZE,
     TITLE,
     VIEWPORT,
     WINDOW_SIZE
@@ -25,7 +21,7 @@ class Mc2d(arcade.Window):
         self.grid = None
         self.player = None
 
-        self.inventory_ui = None
+        self.inventory = None
 
         self.physics_engine = None
 
@@ -41,20 +37,10 @@ class Mc2d(arcade.Window):
         self.grid = Grid(self)
         self.grid.setup()
 
-        self.inventory_ui = arcade.Sprite(
-            str(INVENTORY),
-            scale=SCALING,
-            center_x=WINDOW_SIZE[0] - 24,
-            center_y=WINDOW_SIZE[1] // 2
-        )
+        self.inventory = Inventory(self)
+        self.inventory.setup()
 
-        self.player = Player(
-            self,
-            str(PLAYER / 'idle.png'),
-            scale=SCALING,
-            center_x=PLAYER_SIZE[0] * SCALING,
-            center_y=PLAYER_SIZE[1] * SCALING // 2 + TILE_SIZE * SCALING
-        )
+        self.player = Player(self)
         self.player.setup()
 
         self.physics_engine = arcade.PhysicsEnginePlatformer(
@@ -64,7 +50,7 @@ class Mc2d(arcade.Window):
     def on_draw(self):
         arcade.start_render()
 
-        self.inventory_ui.draw()
+        self.inventory.draw()
         self.grid.draw()
 
         self.world.draw()
@@ -76,6 +62,7 @@ class Mc2d(arcade.Window):
 
     def on_update(self, delta_time):
         self.physics_engine.update()
+        self.inventory.update()
         self.player.update()
 
         changed = False
@@ -119,6 +106,13 @@ class Mc2d(arcade.Window):
             )
 
         self.grid.update(
+            left=self.view_left,
+            right=WINDOW_SIZE[0] + self.view_left,
+            bottom=self.view_bottom,
+            top=WINDOW_SIZE[1] + self.view_bottom
+        )
+
+        self.inventory.update_view(
             left=self.view_left,
             right=WINDOW_SIZE[0] + self.view_left,
             bottom=self.view_bottom,

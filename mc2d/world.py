@@ -3,8 +3,7 @@ import arcade
 from mc2d.config import (
     GRASS,
     SCALING,
-    TILE_SIZE,
-    WINDOW_SIZE
+    TILE_SIZE
 )
 
 
@@ -44,7 +43,7 @@ class World:
             for block in self.block_list:
                 if block.center_x == center_x and block.center_y == center_y:
 
-                    if self.ctx.player.update_inventory(block, 'ADD'):
+                    if self.ctx.inventory.update_items(block, 'ADD'):
                         self.block_list.remove(block)
 
                     break
@@ -55,7 +54,7 @@ class World:
                 if (block.center_x == center_x and block.center_y == center_y):
                     return
 
-            if self.ctx.player.update_inventory(block, 'REMOVE'):
+            if self.ctx.inventory.update_items(block, 'REMOVE'):
                 sprite = arcade.Sprite(
                     str(GRASS / 'grass_2.png'),  # placeholder until inventory system
                     scale=SCALING,
@@ -66,7 +65,7 @@ class World:
                 self.block_list.append(sprite)
 
     def update(self, **viewport):
-        self.ctx.inventory_ui.center_x = viewport['right'] - 48
+        self.ctx.inventory.center_x = viewport['right'] - 48
 
         if self.ground_list[0].left > viewport['left']:
             idx = self.ground_idxs[self.ground_list[0]._cycle_idx - 2]

@@ -1,20 +1,25 @@
 import arcade
 
 from mc2d.config import (
-    GRASS,
+    PLAYER,
     PLAYER_JUMP_SPEED,
     PLAYER_MOVEMENT_SPEED,
+    PLAYER_SIZE,
     SCALING,
-    TILE_SIZE,
-    SELECTION_BOX
+    TILE_SIZE
 )
 from mc2d.utils import find_grid_box
 
 
 class Player(arcade.Sprite):
 
-    def __init__(self, ctx, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+    def __init__(self, ctx):
+        super().__init__(
+            str(PLAYER / 'idle.png'),
+            scale=SCALING,
+            center_x=PLAYER_SIZE[0] * SCALING,
+            center_y=PLAYER_SIZE[1] * SCALING // 2 + TILE_SIZE * SCALING
+        )
         self.ctx = ctx
         self.destination = None
         self.button = None
@@ -22,74 +27,10 @@ class Player(arcade.Sprite):
         self.prev_coords = None
         self.just_started = True
 
-        self.inv_sprites = arcade.SpriteList()
-
     def setup(self):
-        for i in range(4):
-            sprite = arcade.Sprite(
-                str(SELECTION_BOX),
-                scale=SCALING,
-                center_x=self.ctx.inventory_ui.center_x,
-                center_y=self.ctx.inventory_ui.top + 8 + (TILE_SIZE * SCALING * (i + 1)) // 2
-            )
-            sprite.name = 'transparent_block'
-            sprite.amount = 0
-            self.inv_sprites.append(sprite)
-
-        # here until more advanced map generation
-        sprite = arcade.Sprite(
-            str(GRASS),
-            scale=SCALING,
-            center_x=self.ctx.inventory_ui.center_x,
-            center_y=self.ctx.inventory_ui.top + 8 + (TILE_SIZE * SCALING * 5) // 2
-        )
-        sprite.name = 'grass'
-        sprite.amount = 32
-        self.inv_sprites.append(sprite)
-
-    def update_inventory(self, block, state):
-        if state == 'ADD':
-            for inv_block in self.inv_sprites:
-                if inv_block.name == block.name and inv_block.name != 'transparent_block':
-                    if inv_block.amount < 64:
-                        inv_block.amount += 1
-                        return True
-
-            for idx, inv_block in enumerate(self.inv_sprites):
-                if inv_block.name == 'transparent_block':
-                    block.center_x = self.ctx.inventory_ui.center_x
-                    block.center_y = self.ctx.inventory_ui.top + 8 + (TILE_SIZE * SCALING * (idx + 1)) // 2
-
-                    block.amount = 1
-                    self.inv_sprites.pop(idx)
-                    self.inv_sprites.insert(idx, block)
-                    return True
-
-            return False
-
-        elif state == 'REMOVE':
-            for idx, inv_block in enumerate(self.inv_sprites):
-                if inv_block.name == block.name and inv_block.name != 'transparent_block':
-                    inv_block.amount -= 1
-
-                    if inv_block.amount == 0:
-                        sprite = arcade.Sprite(
-                            str(SELECTION_BOX),
-                            scale=SCALING,
-                            center_x=self.ctx.inventory_ui.center_x,
-                            center_y=self.ctx.inventory_ui.top + 8 + (TILE_SIZE * SCALING * (idx + 1)) // 2
-                        )
-                        sprite.name = 'transparent_block'
-                        sprite.amount = 0
-                        self.inv_sprites.pop(idx)
-                        self.inv_sprites.insert(idx, sprite)
-
-                    return True
-
-            return False
+        pass
 
     def update(self):
-        print(*(f'{sprite.name}({sprite.amount})' for sprite in self.inv_sprites))
         if self.destination is not None and self.button is not None:
             scaled_tile = int(TILE_SIZE * SCALING)
             half_tile = scaled_tile // 2
