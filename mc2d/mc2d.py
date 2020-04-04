@@ -50,10 +50,10 @@ class Mc2d(arcade.Window):
     def on_draw(self):
         arcade.start_render()
 
-        self.inventory.draw()
+        self.world.draw()
         self.grid.draw()
 
-        self.world.draw()
+        self.inventory.draw()
         self.player.draw()
 
     def on_mouse_press(self, x, y, button, modifiers):
@@ -98,19 +98,19 @@ class Mc2d(arcade.Window):
                 top=WINDOW_SIZE[1] + self.view_bottom
             )
 
-            self.inventory.update_view(
-                left=self.view_left,
-                right=WINDOW_SIZE[0] + self.view_left,
-                bottom=self.view_bottom,
-                top=WINDOW_SIZE[1] + self.view_bottom
-            )
-
             arcade.set_viewport(
                 self.view_left,
                 WINDOW_SIZE[0] + self.view_left,
                 self.view_bottom,
                 WINDOW_SIZE[1] + self.view_bottom
             )
+
+        self.inventory.update_view(
+            left=self.view_left,
+            right=WINDOW_SIZE[0] + self.view_left,
+            bottom=self.view_bottom,
+            top=WINDOW_SIZE[1] + self.view_bottom
+        )
 
         self.grid.update(
             left=self.view_left,
