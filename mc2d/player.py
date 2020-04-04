@@ -38,7 +38,7 @@ class Player(arcade.Sprite):
 
         # here until more advanced map generation
         sprite = arcade.Sprite(
-            str(SELECTION_BOX),
+            str(GRASS),
             scale=SCALING,
             center_x=self.ctx.inventory_ui.center_x,
             center_y=self.ctx.inventory_ui.top + 8 + (TILE_SIZE * SCALING * 5) // 2
