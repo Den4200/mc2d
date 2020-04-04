@@ -3,7 +3,8 @@ import arcade
 from mc2d.config import (
     GRASS,
     SCALING,
-    TILE_SIZE
+    TILE_SIZE,
+    WINDOW_SIZE
 )
 
 
@@ -11,7 +12,7 @@ class World:
 
     def __init__(self, ctx):
         self.ctx = ctx
-        self.ground_idxs = [1, 2, 3]
+        self.ground_idxs = [*range(1, 4)]
         self.ground_list = arcade.SpriteList()
         self.block_list = arcade.SpriteList()
 
@@ -22,6 +23,7 @@ class World:
             center_x=0,
             center_y=TILE_SIZE * SCALING // 2
         )
+        sprite.name = 'grass'
         sprite._cycle_idx = 1
         self.ground_list.append(sprite)
         self.block_list.append(sprite)
@@ -38,26 +40,32 @@ class World:
 
     def change_block(self, center_x, center_y, button, **viewport):
         if button == arcade.MOUSE_BUTTON_LEFT:
+
             for block in self.block_list:
                 if block.center_x == center_x and block.center_y == center_y:
-                    self.block_list.remove(block)
+
+                    if self.ctx.player.update_inventory(block, 'ADD'):
+                        self.block_list.remove(block)
                     return
 
         if button == arcade.MOUSE_BUTTON_RIGHT:
+
             for block in self.block_list:
                 if block.center_x == center_x and block.center_y == center_y:
                     return
 
-            self.block_list.append(
-                arcade.Sprite(
-                    str(GRASS / 'grass_2.png'),  # placeholder until inventory system
-                    scale=SCALING,
-                    center_x=center_x,
-                    center_y=center_y
-                )
+            sprite = arcade.Sprite(
+                str(GRASS / 'grass_2.png'),  # placeholder until inventory system
+                scale=SCALING,
+                center_x=center_x,
+                center_y=center_y
             )
+            sprite.name = 'grass'
+            self.block_list.append(sprite)
 
     def update(self, **viewport):
+        self.ctx.inventory_ui.center_x = viewport['right'] - 48
+
         if self.ground_list[0].left > viewport['left']:
             idx = self.ground_idxs[self.ground_list[0]._cycle_idx - 2]
             sprite = arcade.Sprite(
@@ -66,6 +74,7 @@ class World:
                 center_x=self.ground_list[0].center_x - int(TILE_SIZE * SCALING),
                 center_y=int(TILE_SIZE * SCALING) // 2
             )
+            sprite.name = 'grass'
             sprite._cycle_idx = idx
             self.ground_list.insert(0, sprite)
             self.block_list.append(sprite)
@@ -78,6 +87,7 @@ class World:
                 center_x=self.ground_list[-1].center_x + int(TILE_SIZE * SCALING),
                 center_y=int(TILE_SIZE * SCALING) // 2
             )
+            sprite.name = 'grass'
             sprite._cycle_idx = idx
             self.ground_list.append(sprite)
             self.block_list.append(sprite)

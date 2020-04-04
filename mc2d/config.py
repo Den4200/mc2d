@@ -24,5 +24,8 @@ PLAYER_JUMP_SPEED = 10
 ASSETS = Path('assets')
 GRASS = ASSETS / 'grass'
 PLAYER = ASSETS / 'player'
+UI = ASSETS / 'ui'
 
-SELECTION_BOX = ASSETS / 'selection_box.png'
+TRANSPARENT_BLOCK = ASSETS / 'transparent_block.png'
+SELECTION_BOX = UI / 'selection_box.png'
+INVENTORY = UI / 'inventory.png'
