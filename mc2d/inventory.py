@@ -3,6 +3,7 @@ import arcade
 from mc2d.config import (
     GRASS,
     INVENTORY,
+    MAX_STACK_SIZE,
     SCALING,
     SELECTION_BOX,
     TILE_SIZE,
@@ -43,7 +44,7 @@ class Inventory(arcade.Sprite):
             center_y=self.top + 12 - int(TILE_SIZE * SCALING * 5) - (4 * 13)
         )
         sprite.name = 'grass'
-        sprite.amount = 16
+        sprite.amount = 32
         self.inv_sprites.append(sprite)
 
     def draw(self):
@@ -54,7 +55,7 @@ class Inventory(arcade.Sprite):
         if state == 'ADD':
             for inv_block in self.inv_sprites:
                 if inv_block.name == block.name and inv_block.name != 'transparent_block':
-                    if inv_block.amount < 64:
+                    if inv_block.amount < MAX_STACK_SIZE:
                         inv_block.amount += 1
                         return True
 

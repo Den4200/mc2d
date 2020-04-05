@@ -13,6 +13,7 @@ WINDOW_SIZE = (
 SCALING = CONFIG['scaling']
 VIEWPORT = CONFIG['viewport']
 
+MAX_STACK_SIZE = CONFIG['max_stack_size']
 TILE_SIZE = 32
 
 GRAVITY = 1
