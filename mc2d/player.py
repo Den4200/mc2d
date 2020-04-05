@@ -24,7 +24,8 @@ class Player(arcade.Sprite):
         self.destination = None
         self.button = None
 
-        self.prev_coords = None
+        self.MAX_ATTEMPTS = 12
+        self.prev_coords = list()
         self.just_started = True
 
     def setup(self):
@@ -35,10 +36,17 @@ class Player(arcade.Sprite):
             scaled_tile = int(TILE_SIZE * SCALING)
             half_tile = scaled_tile // 2
 
-            if self.prev_coords is not None:
-                prev_x, prev_y = find_grid_box(*self.prev_coords)
+            if self.prev_coords:
+                prev_attempts = [find_grid_box(*prev_coords) for prev_coords in self.prev_coords]
 
-                if self.center_x == self.prev_coords[0] and self.center_y == self.prev_coords[1]:
+                if (
+                    len(prev_attempts) == self.MAX_ATTEMPTS and
+                    all(prev_attempts[0] == prev_attempt for prev_attempt in prev_attempts[1:])
+                ):
+                    self.reset()
+                    return
+
+                if self.center_x == self.prev_coords[-1][0] and self.center_y == self.prev_coords[-1][1]:
 
                     if self.ctx.physics_engine.can_jump() and not self.just_started:
                         self.change_y = PLAYER_JUMP_SPEED
@@ -61,14 +69,16 @@ class Player(arcade.Sprite):
                 self.destination[1] - tile < self.center_y < self.destination[1] + tile
             )):
                 self.reset()
+                return
 
+            if self.destination[0] > self.center_x:
+                self.change_x = PLAYER_MOVEMENT_SPEED
             else:
-                if self.destination[0] > self.center_x:
-                    self.change_x = PLAYER_MOVEMENT_SPEED
-                else:
-                    self.change_x = -PLAYER_MOVEMENT_SPEED
+                self.change_x = -PLAYER_MOVEMENT_SPEED
 
-            self.prev_coords = (self.center_x, self.center_y)
+            self.prev_coords.append((self.center_x, self.center_y))
+            if len(self.prev_coords) > self.MAX_ATTEMPTS:
+                self.prev_coords.pop(0)
 
     def reset(self):
         self.change_x = 0
@@ -80,5 +90,5 @@ class Player(arcade.Sprite):
 
         self.button = None
         self.destination = None
-        self.prev_coords = None
+        self.prev_coords = list()
         self.just_started = True
