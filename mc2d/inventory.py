@@ -94,8 +94,11 @@ class Inventory(arcade.Sprite):
 
     def update_view(self, **viewport):
         print(*(f'{sprite.name}({sprite.amount})' for sprite in self.inv_sprites))
+        print(len(self.inv_sprites))
 
         self.center_x = viewport['right'] - 48
+        self.center_y = viewport['top'] - WINDOW_SIZE[1] // 2 + TILE_SIZE * SCALING
 
-        for sprite in self.inv_sprites:
-            sprite.center_x = viewport['right'] - 48
+        for idx, sprite in enumerate(self.inv_sprites):
+            sprite.center_x = self.center_x
+            sprite.center_y = self.top + 12 - int(TILE_SIZE * SCALING * (idx + 1)) - (idx * 13)

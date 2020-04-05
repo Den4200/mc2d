@@ -65,8 +65,6 @@ class World:
                 self.block_list.append(sprite)
 
     def update(self, **viewport):
-        self.ctx.inventory.center_x = viewport['right'] - 48
-
         if self.ground_list[0].left > viewport['left']:
             idx = self.ground_idxs[self.ground_list[0]._cycle_idx - 2]
             sprite = arcade.Sprite(
