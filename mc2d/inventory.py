@@ -23,6 +23,7 @@ class Inventory(arcade.Sprite):
         self.ctx = ctx
 
         self.inv_sprites = arcade.SpriteList()
+        self.block_amounts = arcade.SpriteList()
 
     def setup(self):
         for i in range(4):
@@ -35,6 +36,16 @@ class Inventory(arcade.Sprite):
             sprite.name = 'transparent_block'
             sprite.amount = 0
             self.inv_sprites.append(sprite)
+            self.block_amounts.append(
+                arcade.draw_text(
+                    str(sprite.amount),
+                    sprite.center_x + int(TILE_SIZE * SCALING) - (23 * SCALING),
+                    sprite.center_y - int(TILE_SIZE * SCALING) + (23 * SCALING),
+                    arcade.color.WHITE,
+                    font_size=10 * SCALING,
+                    bold=True
+                )
+            )
 
         # here until more advanced map generation
         sprite = arcade.Sprite(
@@ -44,12 +55,23 @@ class Inventory(arcade.Sprite):
             center_y=self.top + 12 - int(TILE_SIZE * SCALING * 5) - (4 * 13)
         )
         sprite.name = 'grass'
-        sprite.amount = 32
+        sprite.amount = 8
         self.inv_sprites.append(sprite)
+        self.block_amounts.append(
+            arcade.draw_text(
+                str(sprite.amount),
+                sprite.center_x + int(TILE_SIZE * SCALING) - (23 * SCALING),
+                sprite.center_y - int(TILE_SIZE * SCALING) + (23 * SCALING),
+                arcade.color.WHITE,
+                font_size=10 * SCALING,
+                bold=True
+            )
+        )
 
     def draw(self):
         super().draw()
         self.inv_sprites.draw()
+        self.block_amounts.draw()
 
     def update_items(self, block, state):
         if state == 'ADD':
@@ -94,11 +116,14 @@ class Inventory(arcade.Sprite):
 
     def update_view(self, **viewport):
         print(*(f'{sprite.name}({sprite.amount})' for sprite in self.inv_sprites))
-        print(len(self.inv_sprites))
 
         self.center_x = viewport['right'] - 48
         self.center_y = viewport['top'] - WINDOW_SIZE[1] // 2 + TILE_SIZE * SCALING
 
-        for idx, sprite in enumerate(self.inv_sprites):
+        for idx, sprite in enumerate(zip(self.inv_sprites, self.block_amounts)):
+            sprite, amount = sprite
             sprite.center_x = self.center_x
             sprite.center_y = self.top + 12 - int(TILE_SIZE * SCALING * (idx + 1)) - (idx * 13)
+
+            amount.center_x = sprite.center_x + int(TILE_SIZE * SCALING) - (23 * SCALING)
+            amount.center_y = sprite.center_y - int(TILE_SIZE * SCALING) + (23 * SCALING)
