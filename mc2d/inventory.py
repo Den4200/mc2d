@@ -36,16 +36,17 @@ class Inventory(arcade.Sprite):
             sprite.name = 'transparent_block'
             sprite.amount = 0
             self.inv_sprites.append(sprite)
-            self.block_amounts.append(
-                arcade.draw_text(
-                    str(sprite.amount),
-                    sprite.center_x + int(TILE_SIZE * SCALING) - (23 * SCALING),
-                    sprite.center_y - int(TILE_SIZE * SCALING) + (23 * SCALING),
-                    arcade.color.WHITE,
-                    font_size=10 * SCALING,
-                    bold=True
-                )
+
+            amt_sprite = arcade.draw_text(
+                str(sprite.amount),
+                sprite.center_x + int(TILE_SIZE * SCALING) - (24 * SCALING),
+                sprite.center_y - int(TILE_SIZE * SCALING) + (24 * SCALING),
+                arcade.color.WHITE,
+                font_size=10 * SCALING,
+                bold=True
             )
+            amt_sprite.alpha = 0
+            self.block_amounts.append(amt_sprite)
 
         # here until more advanced map generation
         sprite = arcade.Sprite(
@@ -55,13 +56,13 @@ class Inventory(arcade.Sprite):
             center_y=self.top + 12 - int(TILE_SIZE * SCALING * 5) - (4 * 13)
         )
         sprite.name = 'grass'
-        sprite.amount = 8
+        sprite.amount = 32
         self.inv_sprites.append(sprite)
         self.block_amounts.append(
             arcade.draw_text(
                 str(sprite.amount),
-                sprite.center_x + int(TILE_SIZE * SCALING) - (23 * SCALING),
-                sprite.center_y - int(TILE_SIZE * SCALING) + (23 * SCALING),
+                sprite.center_x + int(TILE_SIZE * SCALING) - (24 * SCALING),
+                sprite.center_y - int(TILE_SIZE * SCALING) + (24 * SCALING),
                 arcade.color.WHITE,
                 font_size=10 * SCALING,
                 bold=True
@@ -75,10 +76,21 @@ class Inventory(arcade.Sprite):
 
     def update_items(self, block, state):
         if state == 'ADD':
-            for inv_block in self.inv_sprites:
+            for idx, inv_block in enumerate(self.inv_sprites):
                 if inv_block.name == block.name and inv_block.name != 'transparent_block':
                     if inv_block.amount < MAX_STACK_SIZE:
                         inv_block.amount += 1
+
+                        self.block_amounts.pop(idx)
+                        self.block_amounts.insert(idx, arcade.draw_text(
+                            str(inv_block.amount),
+                            inv_block.center_x + int(TILE_SIZE * SCALING) - (24 * SCALING),
+                            inv_block.center_y - int(TILE_SIZE * SCALING) + (24 * SCALING),
+                            arcade.color.WHITE,
+                            font_size=10 * SCALING,
+                            bold=True
+                        ))
+
                         return True
 
             for idx, inv_block in enumerate(self.inv_sprites):
@@ -89,6 +101,17 @@ class Inventory(arcade.Sprite):
                     block.amount = 1
                     self.inv_sprites.pop(idx)
                     self.inv_sprites.insert(idx, block)
+
+                    self.block_amounts.pop(idx)
+                    self.block_amounts.insert(idx, arcade.draw_text(
+                        str(block.amount),
+                        inv_block.center_x + int(TILE_SIZE * SCALING) - (24 * SCALING),
+                        inv_block.center_y - int(TILE_SIZE * SCALING) + (24 * SCALING),
+                        arcade.color.WHITE,
+                        font_size=10 * SCALING,
+                        bold=True
+                    ))
+
                     return True
 
             return False
@@ -97,6 +120,16 @@ class Inventory(arcade.Sprite):
             for idx, inv_block in enumerate(self.inv_sprites):
                 if inv_block.name == block.name and inv_block.name != 'transparent_block':
                     inv_block.amount -= 1
+
+                    self.block_amounts.pop(idx)
+                    amt_sprite = arcade.draw_text(
+                        str(inv_block.amount),
+                        inv_block.center_x + int(TILE_SIZE * SCALING) - (24 * SCALING),
+                        inv_block.center_y - int(TILE_SIZE * SCALING) + (24 * SCALING),
+                        arcade.color.WHITE,
+                        font_size=10 * SCALING,
+                        bold=True
+                    )
 
                     if inv_block.amount == 0:
                         sprite = arcade.Sprite(
@@ -110,13 +143,15 @@ class Inventory(arcade.Sprite):
                         self.inv_sprites.pop(idx)
                         self.inv_sprites.insert(idx, sprite)
 
+                        amt_sprite.alpha = 0
+
+                    self.block_amounts.insert(idx, amt_sprite)
+
                     return True
 
             return False
 
     def update_view(self, **viewport):
-        print(*(f'{sprite.name}({sprite.amount})' for sprite in self.inv_sprites))
-
         self.center_x = viewport['right'] - 48
         self.center_y = viewport['top'] - WINDOW_SIZE[1] // 2 + TILE_SIZE * SCALING
 
@@ -125,5 +160,5 @@ class Inventory(arcade.Sprite):
             sprite.center_x = self.center_x
             sprite.center_y = self.top + 12 - int(TILE_SIZE * SCALING * (idx + 1)) - (idx * 13)
 
-            amount.center_x = sprite.center_x + int(TILE_SIZE * SCALING) - (23 * SCALING)
-            amount.center_y = sprite.center_y - int(TILE_SIZE * SCALING) + (23 * SCALING)
+            amount.center_x = sprite.center_x + int(TILE_SIZE * SCALING) - (24 * SCALING)
+            amount.center_y = sprite.center_y - int(TILE_SIZE * SCALING) + (24 * SCALING)
