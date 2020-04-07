@@ -90,7 +90,7 @@ class Inventory(arcade.Sprite):
                             inv_block.center_x + int(TILE_SIZE * SCALING) - (24 * SCALING),
                             inv_block.center_y - int(TILE_SIZE * SCALING) + (24 * SCALING),
                             arcade.color.WHITE,
-                            font_size=10 * SCALING,
+                            font_size=10 * SCALING + idx * 0.01,
                             bold=True
                         ))
 
@@ -111,7 +111,7 @@ class Inventory(arcade.Sprite):
                         inv_block.center_x + int(TILE_SIZE * SCALING) - (24 * SCALING),
                         inv_block.center_y - int(TILE_SIZE * SCALING) + (24 * SCALING),
                         arcade.color.WHITE,
-                        font_size=10 * SCALING,
+                        font_size=10 * SCALING + idx * 0.01,
                         bold=True
                     ))
 
@@ -130,7 +130,7 @@ class Inventory(arcade.Sprite):
                         inv_block.center_x + int(TILE_SIZE * SCALING) - (24 * SCALING),
                         inv_block.center_y - int(TILE_SIZE * SCALING) + (24 * SCALING),
                         arcade.color.WHITE,
-                        font_size=10 * SCALING,
+                        font_size=10 * SCALING + idx * 0.01,
                         bold=True
                     )
 
