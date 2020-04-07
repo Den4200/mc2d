@@ -7,7 +7,8 @@ from mc2d.config import (
     SCALING,
     SELECTION_BOX,
     TILE_SIZE,
-    WINDOW_SIZE
+    WINDOW_SIZE,
+    WOOD
 )
 
 
@@ -26,7 +27,30 @@ class Inventory(arcade.Sprite):
         self.block_amounts = arcade.SpriteList()
 
     def setup(self):
-        for i in range(4):
+        # here until more advanced map generation
+        names = ('grass', 'oak_wood')
+        for idx, sprite_path in enumerate((str(GRASS / 'grass_2.png'), str(WOOD / 'oak.png'))):
+            sprite = arcade.Sprite(
+                sprite_path,
+                scale=SCALING,
+                center_x=self.center_x,
+                center_y=self.top + 12 - int(TILE_SIZE * SCALING * (idx + 1)) - (idx * 13)
+            )
+            sprite.name = names[idx]
+            sprite.amount = 64
+            self.inv_sprites.append(sprite)
+            self.block_amounts.append(
+                arcade.draw_text(
+                    str(sprite.amount),
+                    sprite.center_x + int(TILE_SIZE * SCALING) - (24 * SCALING),
+                    sprite.center_y - int(TILE_SIZE * SCALING) + (24 * SCALING),
+                    arcade.color.WHITE,
+                    font_size=10 * SCALING + idx * 0.01,  # weird arcade cache.. uses the same instance
+                    bold=True                             # https://arcade.academy/_modules/arcade/text.html#draw_text
+                )
+            )
+
+        for i in range(2, 5):
             sprite = arcade.Sprite(
                 str(SELECTION_BOX),
                 scale=SCALING,
@@ -42,32 +66,11 @@ class Inventory(arcade.Sprite):
                 sprite.center_x + int(TILE_SIZE * SCALING) - (24 * SCALING),
                 sprite.center_y - int(TILE_SIZE * SCALING) + (24 * SCALING),
                 arcade.color.WHITE,
-                font_size=10 * SCALING,
-                bold=True
+                font_size=10 * SCALING + i * 0.01,  # weird arcade cache.. uses the same instance
+                bold=True                           # https://arcade.academy/_modules/arcade/text.html#draw_text
             )
             amt_sprite.alpha = 0
             self.block_amounts.append(amt_sprite)
-
-        # here until more advanced map generation
-        sprite = arcade.Sprite(
-            str(GRASS / 'grass_2.png'),
-            scale=SCALING,
-            center_x=self.center_x,
-            center_y=self.top + 12 - int(TILE_SIZE * SCALING * 5) - (4 * 13)
-        )
-        sprite.name = 'grass'
-        sprite.amount = 32
-        self.inv_sprites.append(sprite)
-        self.block_amounts.append(
-            arcade.draw_text(
-                str(sprite.amount),
-                sprite.center_x + int(TILE_SIZE * SCALING) - (24 * SCALING),
-                sprite.center_y - int(TILE_SIZE * SCALING) + (24 * SCALING),
-                arcade.color.WHITE,
-                font_size=10 * SCALING,
-                bold=True
-            )
-        )
 
     def draw(self):
         super().draw()

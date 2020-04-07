@@ -24,6 +24,7 @@ PLAYER_JUMP_SPEED = 10
 
 ASSETS = Path('assets')
 GRASS = ASSETS / 'grass'
+WOOD = ASSETS / 'wood'
 PLAYER = ASSETS / 'player'
 UI = ASSETS / 'ui'
 
