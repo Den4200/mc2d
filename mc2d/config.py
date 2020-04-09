@@ -23,6 +23,7 @@ PLAYER_MOVEMENT_SPEED = 5
 PLAYER_JUMP_SPEED = 10
 
 ASSETS = Path('assets')
+LEAVES = ASSETS / 'leaves'
 GRASS = ASSETS / 'grass'
 WOOD = ASSETS / 'wood'
 PLAYER = ASSETS / 'player'
@@ -34,5 +35,6 @@ INVENTORY = UI / 'inventory.png'
 
 BLOCKS = {
     'grass': str(GRASS / 'grass_2.png'),
-    'oak_wood': str(WOOD / 'oak.png')
+    'oak_wood': str(WOOD / 'oak_wood.png'),
+    'oak_leaves': str(LEAVES / 'oak_leaves.png')
 }

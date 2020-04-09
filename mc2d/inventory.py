@@ -1,14 +1,13 @@
 import arcade
 
 from mc2d.config import (
-    GRASS,
+    BLOCKS,
     INVENTORY,
     MAX_STACK_SIZE,
     SCALING,
     SELECTION_BOX,
     TILE_SIZE,
-    WINDOW_SIZE,
-    WOOD
+    WINDOW_SIZE
 )
 
 
@@ -29,15 +28,16 @@ class Inventory(arcade.Sprite):
 
     def setup(self):
         # here until more advanced map generation
-        names = ('grass', 'oak_wood')
-        for idx, sprite_path in enumerate((str(GRASS / 'grass_2.png'), str(WOOD / 'oak.png'))):
+        for idx, sprite_info in enumerate(BLOCKS.items()):
+            sprite_name, sprite_path = sprite_info
+
             sprite = arcade.Sprite(
                 sprite_path,
                 scale=SCALING,
                 center_x=self.center_x,
                 center_y=self.top + 12 - int(TILE_SIZE * SCALING * (idx + 1)) - (idx * 13)
             )
-            sprite.name = names[idx]
+            sprite.name = sprite_name
             sprite.amount = 64
             self.inv_sprites.append(sprite)
             self.block_amounts.append(
@@ -51,7 +51,7 @@ class Inventory(arcade.Sprite):
                 )
             )
 
-        for i in range(2, 5):
+        for i in range(3, 5):
             sprite = arcade.Sprite(
                 str(SELECTION_BOX),
                 scale=SCALING,
