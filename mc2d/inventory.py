@@ -106,7 +106,7 @@ class Inventory(arcade.Sprite):
             return True
         return False
 
-    def update_items(self, block, state):
+    def update_items(self, state, block=None):
         if state == 'ADD':
             for idx, inv_block in enumerate(self.inv_sprites):
                 if inv_block.name == block.name and inv_block.name != 'transparent_block':
@@ -149,8 +149,10 @@ class Inventory(arcade.Sprite):
             return False
 
         elif state == 'REMOVE':
+            sprite_name = self.inv_sprites[self.selected_item.index].name
+
             for idx, inv_block in enumerate(self.inv_sprites):
-                if inv_block.name == block.name and inv_block.name != 'transparent_block':
+                if inv_block.name == sprite_name and inv_block.name != 'transparent_block':
                     inv_block.amount -= 1
 
                     self.block_amounts.pop(idx)
@@ -179,7 +181,7 @@ class Inventory(arcade.Sprite):
 
                     self.block_amounts.insert(idx, amt_sprite)
 
-                    return True
+                    return sprite_name
 
             return False
 

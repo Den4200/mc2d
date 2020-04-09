@@ -44,7 +44,7 @@ class World:
             for block in self.block_list:
                 if block.center_x == center_x and block.center_y == center_y:
 
-                    if self.ctx.inventory.update_items(block, 'ADD'):
+                    if self.ctx.inventory.update_items('ADD', block):
                         self.block_list.remove(block)
 
                     break
@@ -52,21 +52,19 @@ class World:
         elif button == arcade.MOUSE_BUTTON_RIGHT:
 
             for block in self.block_list:
-                if (block.center_x == center_x and block.center_y == center_y):
+                if block.center_x == center_x and block.center_y == center_y:
                     return
 
-            if self.ctx.inventory.update_items(block, 'REMOVE'):
-                sprite_name = self.ctx.inventory.inv_sprites[self.ctx.inventory.selected_item.index].name
-
-                if sprite_name != 'transparent_block':
-                    sprite = arcade.Sprite(
-                        BLOCKS[sprite_name],
-                        scale=SCALING,
-                        center_x=center_x,
-                        center_y=center_y
-                    )
-                    sprite.name = sprite_name
-                    self.block_list.append(sprite)
+            sprite_name = self.ctx.inventory.update_items('REMOVE')
+            if sprite_name and sprite_name != 'transparent_block':
+                sprite = arcade.Sprite(
+                    BLOCKS[sprite_name],
+                    scale=SCALING,
+                    center_x=center_x,
+                    center_y=center_y
+                )
+                sprite.name = sprite_name
+                self.block_list.append(sprite)
 
     def update(self, **viewport):
         if self.ground_list[0].left > viewport['left']:
