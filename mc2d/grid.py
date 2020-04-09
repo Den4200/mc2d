@@ -20,37 +20,39 @@ class Grid:
 
     def update(self, **viewport):
         if self.selection is not None:
-            center_x, center_y = find_grid_box(
-                self.selection[0] + viewport['left'],
-                self.selection[1] + viewport['bottom']
-            )
+            if not self.ctx.inventory.select_item(*self.selection, **viewport):
 
-            if len(self.boxes) > 0:
-                if self.boxes[0].center_x == center_x and self.boxes[0].center_y == center_y:
-                    self.boxes.pop(0)
-                    self.selection = None
-
-                    self.ctx.player.button = None
-                    self.ctx.player.destination = None
-                    self.ctx.player.change_x = 0
-                    return
-
-            self.boxes.append(
-                arcade.Sprite(
-                    str(SELECTION_BOX),
-                    scale=SCALING,
-                    center_x=center_x,
-                    center_y=center_y
+                center_x, center_y = find_grid_box(
+                    self.selection[0] + viewport['left'],
+                    self.selection[1] + viewport['bottom']
                 )
-            )
 
-            if len(self.boxes) > 1:
-                self.boxes.pop(0)
+                if len(self.boxes) > 0:
+                    if self.boxes[0].center_x == center_x and self.boxes[0].center_y == center_y:
+                        self.boxes.pop(0)
+                        self.selection = None
 
-            if not self.should_not_check:
-                self.ctx.player.destination = (center_x, center_y, *self.selection, viewport)
-                self.ctx.player.button = self.selection[2]
-            else:
-                self.should_not_check = False
+                        self.ctx.player.button = None
+                        self.ctx.player.destination = None
+                        self.ctx.player.change_x = 0
+                        return
+
+                self.boxes.append(
+                    arcade.Sprite(
+                        str(SELECTION_BOX),
+                        scale=SCALING,
+                        center_x=center_x,
+                        center_y=center_y
+                    )
+                )
+
+                if len(self.boxes) > 1:
+                    self.boxes.pop(0)
+
+                if not self.should_not_check:
+                    self.ctx.player.destination = (center_x, center_y, *self.selection, viewport)
+                    self.ctx.player.button = self.selection[2]
+                else:
+                    self.should_not_check = False
 
             self.selection = None

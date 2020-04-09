@@ -31,3 +31,8 @@ UI = ASSETS / 'ui'
 TRANSPARENT_BLOCK = ASSETS / 'transparent_block.png'
 SELECTION_BOX = UI / 'selection_box.png'
 INVENTORY = UI / 'inventory.png'
+
+BLOCKS = {
+    'grass': str(GRASS / 'grass_2.png'),
+    'oak_wood': str(WOOD / 'oak.png')
+}

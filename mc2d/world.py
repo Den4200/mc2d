@@ -1,6 +1,7 @@
 import arcade
 
 from mc2d.config import (
+    BLOCKS,
     GRASS,
     SCALING,
     TILE_SIZE
@@ -55,14 +56,17 @@ class World:
                     return
 
             if self.ctx.inventory.update_items(block, 'REMOVE'):
-                sprite = arcade.Sprite(
-                    str(GRASS / 'grass_2.png'),  # placeholder until inventory system
-                    scale=SCALING,
-                    center_x=center_x,
-                    center_y=center_y
-                )
-                sprite.name = 'grass'
-                self.block_list.append(sprite)
+                sprite_name = self.ctx.inventory.inv_sprites[self.ctx.inventory.selected_item.index].name
+
+                if sprite_name != 'transparent_block':
+                    sprite = arcade.Sprite(
+                        BLOCKS[sprite_name],
+                        scale=SCALING,
+                        center_x=center_x,
+                        center_y=center_y
+                    )
+                    sprite.name = sprite_name
+                    self.block_list.append(sprite)
 
     def update(self, **viewport):
         if self.ground_list[0].left > viewport['left']:

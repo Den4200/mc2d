@@ -25,6 +25,7 @@ class Inventory(arcade.Sprite):
 
         self.inv_sprites = arcade.SpriteList()
         self.block_amounts = arcade.SpriteList()
+        self.selected_item = None
 
     def setup(self):
         # here until more advanced map generation
@@ -72,10 +73,38 @@ class Inventory(arcade.Sprite):
             amt_sprite.alpha = 0
             self.block_amounts.append(amt_sprite)
 
+        self.selected_item = arcade.Sprite(
+            str(SELECTION_BOX),
+            scale=SCALING,
+            center_x=self.center_x,
+            center_y=self.top + 12 - int(TILE_SIZE * SCALING * 1)
+        )
+        self.selected_item.index = 0
+
     def draw(self):
         super().draw()
         self.inv_sprites.draw()
         self.block_amounts.draw()
+        self.selected_item.draw()
+
+    def select_item(self, x, y, button, **viewport):
+        x += viewport['left']
+        y += viewport['bottom']
+
+        if (
+            self.left < x < self.right and
+            self.bottom < y < self.top
+        ):
+            for idx, block in enumerate(self.inv_sprites):
+                if (
+                    block.left < x < block.right and
+                    block.bottom < y < block.top
+                ):
+                    self.selected_item.index = idx
+                    break
+
+            return True
+        return False
 
     def update_items(self, block, state):
         if state == 'ADD':
@@ -165,3 +194,7 @@ class Inventory(arcade.Sprite):
 
             amount.center_x = sprite.center_x + int(TILE_SIZE * SCALING) - (24 * SCALING)
             amount.center_y = sprite.center_y - int(TILE_SIZE * SCALING) + (24 * SCALING)
+
+            if self.selected_item.index == idx:
+                self.selected_item.center_x = self.center_x
+                self.selected_item.center_y = self.top + 12 - int(TILE_SIZE * SCALING * (idx + 1)) - (idx * 13)
