@@ -20,7 +20,7 @@ class World:
         sprite = arcade.Sprite(
             str(GRASS / 'grass_1.png'),
             scale=SCALING,
-            center_x=0,
+            center_x=TILE_SIZE * SCALING // 2,
             center_y=TILE_SIZE * SCALING // 2
         )
         sprite.name = 'grass'
@@ -67,7 +67,6 @@ class World:
                 self.block_list.append(sprite)
 
     def update(self, **viewport):
-        print(len(self.ground_list))
         if self.ground_list[0].left > viewport['left']:
             idx = self.ground_idxs[self.ground_list[0]._cycle_idx - 2]
             sprite = arcade.Sprite(
