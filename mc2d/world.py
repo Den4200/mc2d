@@ -168,8 +168,6 @@ class TreeGenerator:
         else:
             self.trees.insert(idx, base_tree_pos)
 
-        print(len(self.trees))
-
     def update(self, direction):
         self._generate_random_distance()
         detect_range = 12 * int(TILE_SIZE * SCALING)
