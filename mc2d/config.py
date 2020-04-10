@@ -24,13 +24,18 @@ PLAYER_MOVEMENT_SPEED = 5
 PLAYER_JUMP_SPEED = 10
 
 ASSETS = Path('assets')
+
+MAIN_MENU_BG = ASSETS / 'splash_screen.png'
+
 LEAVES = ASSETS / 'leaves'
 GRASS = ASSETS / 'grass'
 WOOD = ASSETS / 'wood'
 PLAYER = ASSETS / 'player'
 UI = ASSETS / 'ui'
 
-TRANSPARENT_BLOCK = ASSETS / 'transparent_block.png'
+PLAY_BUTTON_RELEASED = UI / 'play_button_released.png'
+PLAY_BUTTON_PRESSED = UI / 'play_button_pressed.png'
+
 SELECTION_BOX = UI / 'selection_box.png'
 INVENTORY = UI / 'inventory.png'
 

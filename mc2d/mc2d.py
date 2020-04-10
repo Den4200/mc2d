@@ -5,18 +5,16 @@ from mc2d.grid import Grid
 from mc2d.inventory import Inventory
 from mc2d.world import World
 from mc2d.config import (
-    FULLSCREEN,
     GRAVITY,
-    TITLE,
     VIEWPORT,
     WINDOW_SIZE
 )
 
 
-class Mc2d(arcade.Window):
+class Mc2d(arcade.View):
 
     def __init__(self) -> None:
-        super().__init__(*WINDOW_SIZE, TITLE, fullscreen=FULLSCREEN)
+        super().__init__()
 
         self.world = None
         self.grid = None
@@ -30,6 +28,8 @@ class Mc2d(arcade.Window):
         self.view_left = 0
 
         arcade.set_background_color(arcade.csscolor.CORNFLOWER_BLUE)
+
+        self.setup()
 
     def setup(self):
         self.world = World(self)
