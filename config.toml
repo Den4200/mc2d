@@ -1,10 +1,12 @@
 title = 'Minecraft 2D'
+
 scaling = 1.6
 max_stack_size = 64
 
 [window_size]
 x = 1280
 y = 720
+fullscreen = false
 
 [viewport]
 top = 100

@@ -10,6 +10,7 @@ WINDOW_SIZE = (
     CONFIG['window_size']['x'],
     CONFIG['window_size']['y']
 )
+FULLSCREEN = CONFIG['window_size']['fullscreen']
 SCALING = CONFIG['scaling']
 VIEWPORT = CONFIG['viewport']
 

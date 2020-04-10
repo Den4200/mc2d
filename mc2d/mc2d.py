@@ -5,6 +5,7 @@ from mc2d.grid import Grid
 from mc2d.inventory import Inventory
 from mc2d.world import World
 from mc2d.config import (
+    FULLSCREEN,
     GRAVITY,
     TITLE,
     VIEWPORT,
@@ -15,12 +16,12 @@ from mc2d.config import (
 class Mc2d(arcade.Window):
 
     def __init__(self) -> None:
-        super().__init__(*WINDOW_SIZE, TITLE)
+        super().__init__(*WINDOW_SIZE, TITLE, fullscreen=FULLSCREEN)
 
         self.world = None
         self.grid = None
-        self.player = None
 
+        self.player = None
         self.inventory = None
 
         self.physics_engine = None

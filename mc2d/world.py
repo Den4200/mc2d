@@ -44,7 +44,7 @@ class World:
         self.ground_list.append(sprite)
         self.block_list.append(sprite)
 
-        self.tree_generator.one(6, 0)
+        self.tree_generator.setup()
 
     def draw(self):
         self.block_list.draw()
@@ -98,6 +98,8 @@ class World:
             self.ground_list.insert(0, sprite)
             self.block_list.append(sprite)
 
+            self.tree_generator.update('left')
+
         elif self.ground_list[-1].right < viewport['right']:
             idx = self.ground_idxs[self.ground_list[-1].cycle_idx % 3]
             sprite = Block(
@@ -111,6 +113,8 @@ class World:
             self.ground_list.append(sprite)
             self.block_list.append(sprite)
 
+            self.tree_generator.update('right')
+
         if self.ground_list[0].left + int(TILE_SIZE * SCALING) < viewport['left']:
             self.block_list.remove(self.ground_list.pop(0))
 
@@ -122,20 +126,60 @@ class TreeGenerator:
 
     def __init__(self, ctx):
         self.ctx = ctx
+        self.trees = list()
+        self.tree_distance = None
 
-    def one(self, offset_x_blocks, offset_y_blocks):
+    def setup(self):
+        self._generate_random_distance()
+        self.one(5, 0, 0)
+
+    def _generate_random_distance(self):
+        if self.tree_distance is None:
+            self.tree_distance = random.randrange(16, 41, 8)
+
+    def one(self, offset_x_blocks, offset_y_blocks, idx):
         tree_shape = random.choice(
             json.loads(TREE_SHAPES.read_text())
         )
-        offset_x = offset_x_blocks * int(TILE_SIZE * SCALING)
-        offset_y = offset_y_blocks * int(TILE_SIZE * SCALING)
+        if self.trees:
+            offset_x = offset_x_blocks * int(TILE_SIZE * SCALING) + self.trees[idx][0]
+            offset_y = offset_y_blocks * int(TILE_SIZE * SCALING) + self.trees[idx][1]
+        else:
+            offset_x = offset_x_blocks * int(TILE_SIZE * SCALING) + int(TILE_SIZE * SCALING) // 2
+            offset_y = offset_y_blocks * int(TILE_SIZE * SCALING) + int(TILE_SIZE * SCALING) // 2
 
         self.ctx.world.block_list.extend((
             Block(
-                filename=BLOCK_PATHS[BLOCK_IDS[tree_shape[y][x]]],
                 scale=SCALING,
-                center_x=x * int(TILE_SIZE * SCALING) + int(TILE_SIZE * SCALING) // 2 + offset_x,
-                center_y=(len(tree_shape) - y) * int(TILE_SIZE * SCALING) + int(TILE_SIZE * SCALING) // 2 + offset_y,
-                name=BLOCK_IDS[tree_shape[y][x]]
+                name=BLOCK_IDS[tree_shape[y][x]],
+                filename=BLOCK_PATHS[BLOCK_IDS[tree_shape[y][x]]],
+                center_x=x * int(TILE_SIZE * SCALING) + offset_x,
+                center_y=(len(tree_shape) - y) * int(TILE_SIZE * SCALING) + offset_y
             ) for x in range(len(tree_shape[0])) for y in range(len(tree_shape)) if tree_shape[y][x] != 0
         ))
+
+        base_tree_pos = (
+            (len(tree_shape[0]) // 2 + 1) * int(TILE_SIZE * SCALING) + offset_x,
+            offset_y
+        )
+
+        if idx == -1:
+            self.trees.append(base_tree_pos)
+        else:
+            self.trees.insert(idx, base_tree_pos)
+
+        print(len(self.trees))
+
+    def update(self, direction):
+        self._generate_random_distance()
+        detect_range = 12 * int(TILE_SIZE * SCALING)
+
+        if direction == 'left':
+            if self.ctx.player.center_x < self.trees[0][0] + detect_range:
+                self.one(-self.tree_distance, 0, 0)
+                self.tree_distance = None
+
+        elif direction == 'right':
+            if self.trees[-1][0] - detect_range < self.ctx.player.center_x:
+                self.one(self.tree_distance, 0, -1)
+                self.tree_distance = None
