@@ -1,7 +1,7 @@
 import arcade
 
 from mc2d.config import (
-    BLOCKS,
+    BLOCK_PATHS,
     INVENTORY,
     MAX_STACK_SIZE,
     SCALING,
@@ -28,7 +28,7 @@ class Inventory(arcade.Sprite):
 
     def setup(self):
         # here until more advanced map generation
-        for idx, sprite_info in enumerate(BLOCKS.items()):
+        for idx, sprite_info in enumerate(BLOCK_PATHS.items()):
             sprite_name, sprite_path = sprite_info
 
             sprite = arcade.Sprite(
@@ -51,7 +51,7 @@ class Inventory(arcade.Sprite):
                 )
             )
 
-        for i in range(3, 5):
+        for i in range(len(BLOCK_PATHS), 5):
             sprite = arcade.Sprite(
                 str(SELECTION_BOX),
                 scale=SCALING,

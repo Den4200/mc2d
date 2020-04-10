@@ -12,3 +12,6 @@ toml = "*"
 
 [requires]
 python_version = "3.7"
+
+[scripts]
+mc2d = 'python -m mc2d'

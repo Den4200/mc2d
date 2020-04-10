@@ -1,10 +1,15 @@
+import json
+import random
+
 import arcade
 
 from mc2d.config import (
-    BLOCKS,
+    BLOCK_IDS,
+    BLOCK_PATHS,
     GRASS,
     SCALING,
-    TILE_SIZE
+    TILE_SIZE,
+    TREE_SHAPES
 )
 
 
@@ -13,7 +18,7 @@ class World:
     def __init__(self, ctx):
         self.ctx = ctx
         self.ground_idxs = [*range(1, 4)]
-        self.ground_list = arcade.SpriteList()
+        self.ground_list = list()
         self.block_list = arcade.SpriteList()
 
     def setup(self):
@@ -27,6 +32,8 @@ class World:
         sprite._cycle_idx = 1
         self.ground_list.append(sprite)
         self.block_list.append(sprite)
+
+        self.generate_trees()
 
     def draw(self):
         self.block_list.draw()
@@ -58,13 +65,26 @@ class World:
             sprite_name = self.ctx.inventory.update_items('REMOVE')
             if sprite_name and sprite_name != 'transparent_block':
                 sprite = arcade.Sprite(
-                    BLOCKS[sprite_name],
+                    BLOCK_PATHS[sprite_name],
                     scale=SCALING,
                     center_x=center_x,
                     center_y=center_y
                 )
                 sprite.name = sprite_name
                 self.block_list.append(sprite)
+
+    def generate_trees(self):
+        tree_shape = random.choice(
+            json.loads(TREE_SHAPES.read_text())
+        )
+        self.block_list.extend((
+            arcade.Sprite(
+                BLOCK_PATHS[BLOCK_IDS[tree_shape[y][x]]],
+                scale=SCALING,
+                center_x=x * (TILE_SIZE * SCALING) + (TILE_SIZE * SCALING) // 2,
+                center_y=(len(tree_shape) - y) * (TILE_SIZE * SCALING) + (TILE_SIZE * SCALING) // 2
+            ) for x in range(len(tree_shape[0])) for y in range(len(tree_shape)) if tree_shape[y][x] != 0
+        ))
 
     def update(self, **viewport):
         if self.ground_list[0].left > viewport['left']:
