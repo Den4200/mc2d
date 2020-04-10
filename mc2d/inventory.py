@@ -150,39 +150,39 @@ class Inventory(arcade.Sprite):
             return False
 
         elif state == 'REMOVE':
-            sprite_name = self.inv_sprites[self.selected_item.index].name
+            idx = self.selected_item.index
+            inv_block = self.inv_sprites[idx]
 
-            for idx, inv_block in enumerate(self.inv_sprites):
-                if inv_block.name == sprite_name and inv_block.name != 'transparent_block':
-                    inv_block.amount -= 1
+            if inv_block.name != 'transparent_block':
+                inv_block.amount -= 1
 
-                    self.block_amounts.pop(idx)
-                    amt_sprite = arcade.draw_text(
-                        str(inv_block.amount),
-                        inv_block.center_x + int(TILE_SIZE * SCALING) - (24 * SCALING),
-                        inv_block.center_y - int(TILE_SIZE * SCALING) + (24 * SCALING),
-                        arcade.color.WHITE,
-                        font_size=10 * SCALING + idx * 0.01,
-                        bold=True
+                self.block_amounts.pop(idx)
+                amt_sprite = arcade.draw_text(
+                    str(inv_block.amount),
+                    inv_block.center_x + int(TILE_SIZE * SCALING) - (24 * SCALING),
+                    inv_block.center_y - int(TILE_SIZE * SCALING) + (24 * SCALING),
+                    arcade.color.WHITE,
+                    font_size=10 * SCALING + idx * 0.01,
+                    bold=True
+                )
+
+                if inv_block.amount == 0:
+                    sprite = Block(
+                        filename=str(SELECTION_BOX),
+                        scale=SCALING,
+                        center_x=self.center_x,
+                        center_y=self.top + 12 - int(TILE_SIZE * SCALING * (idx + 1)) - (idx * 13),
+                        name='transparent_block',
+                        amount=0
                     )
+                    self.inv_sprites.pop(idx)
+                    self.inv_sprites.insert(idx, sprite)
 
-                    if inv_block.amount == 0:
-                        sprite = Block(
-                            str(SELECTION_BOX),
-                            scale=SCALING,
-                            center_x=self.center_x,
-                            center_y=self.top + 12 - int(TILE_SIZE * SCALING * (idx + 1)) - (idx * 13),
-                            name='transparent_block',
-                            amount=0
-                        )
-                        self.inv_sprites.pop(idx)
-                        self.inv_sprites.insert(idx, sprite)
+                    amt_sprite.alpha = 0
 
-                        amt_sprite.alpha = 0
+                self.block_amounts.insert(idx, amt_sprite)
 
-                    self.block_amounts.insert(idx, amt_sprite)
-
-                    return sprite_name
+                return inv_block.name
 
             return False
 
