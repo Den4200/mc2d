@@ -1,5 +1,6 @@
 import arcade
 
+from mc2d.world import Block
 from mc2d.config import (
     BLOCK_PATHS,
     INVENTORY,
@@ -31,14 +32,14 @@ class Inventory(arcade.Sprite):
         for idx, sprite_info in enumerate(BLOCK_PATHS.items()):
             sprite_name, sprite_path = sprite_info
 
-            sprite = arcade.Sprite(
-                sprite_path,
+            sprite = Block(
+                filename=sprite_path,
                 scale=SCALING,
                 center_x=self.center_x,
-                center_y=self.top + 12 - int(TILE_SIZE * SCALING * (idx + 1)) - (idx * 13)
+                center_y=self.top + 12 - int(TILE_SIZE * SCALING * (idx + 1)) - (idx * 13),
+                name=sprite_name,
+                amount=64
             )
-            sprite.name = sprite_name
-            sprite.amount = 64
             self.inv_sprites.append(sprite)
             self.block_amounts.append(
                 arcade.draw_text(
@@ -52,14 +53,14 @@ class Inventory(arcade.Sprite):
             )
 
         for i in range(len(BLOCK_PATHS), 5):
-            sprite = arcade.Sprite(
-                str(SELECTION_BOX),
+            sprite = Block(
+                filename=str(SELECTION_BOX),
                 scale=SCALING,
                 center_x=self.center_x,
-                center_y=self.top + 12 - int(TILE_SIZE * SCALING * (i + 1)) - (i * 13)
+                center_y=self.top + 12 - int(TILE_SIZE * SCALING * (i + 1)) - (i * 13),
+                name='transparent_block',
+                amount=0
             )
-            sprite.name = 'transparent_block'
-            sprite.amount = 0
             self.inv_sprites.append(sprite)
 
             amt_sprite = arcade.draw_text(
@@ -166,14 +167,14 @@ class Inventory(arcade.Sprite):
                     )
 
                     if inv_block.amount == 0:
-                        sprite = arcade.Sprite(
+                        sprite = Block(
                             str(SELECTION_BOX),
                             scale=SCALING,
                             center_x=self.center_x,
-                            center_y=self.top + 12 - int(TILE_SIZE * SCALING * (idx + 1)) - (idx * 13)
+                            center_y=self.top + 12 - int(TILE_SIZE * SCALING * (idx + 1)) - (idx * 13),
+                            name='transparent_block',
+                            amount=0
                         )
-                        sprite.name = 'transparent_block'
-                        sprite.amount = 0
                         self.inv_sprites.pop(idx)
                         self.inv_sprites.insert(idx, sprite)
 
