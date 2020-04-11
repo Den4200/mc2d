@@ -1,3 +1,4 @@
+import json
 from pathlib import Path
 
 import toml
@@ -39,7 +40,7 @@ PLAY_BUTTON_PRESSED = UI / 'play_button_pressed.png'
 SELECTION_BOX = UI / 'selection_box.png'
 INVENTORY = UI / 'inventory.png'
 
-TREE_SHAPES = ASSETS / 'tree_shapes.json'
+TREE_SHAPES = json.loads((ASSETS / 'tree_shapes.json').read_text())
 
 BLOCK_PATHS = {
     'grass': str(GRASS / 'grass_2.png'),

@@ -1,4 +1,3 @@
-import json
 import random
 
 import arcade
@@ -138,9 +137,7 @@ class TreeGenerator:
             self.tree_distance = random.randrange(16, 41, 8)
 
     def one(self, offset_x_blocks, offset_y_blocks, idx):
-        tree_shape = random.choice(
-            json.loads(TREE_SHAPES.read_text())
-        )
+        tree_shape = random.choice(TREE_SHAPES)
         if self.trees:
             offset_x = offset_x_blocks * int(TILE_SIZE * SCALING) + self.trees[idx][0]
             offset_y = offset_y_blocks * int(TILE_SIZE * SCALING) + self.trees[idx][1]
