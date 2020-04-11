@@ -13,3 +13,7 @@ top = 100
 bottom = 50
 left = 500
 right = 500
+
+[world]
+chunk_size_x = 8
+chunk_size_y = 8

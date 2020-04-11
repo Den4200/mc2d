@@ -15,6 +15,8 @@ FULLSCREEN = CONFIG['window_size']['fullscreen']
 SCALING = CONFIG['scaling']
 VIEWPORT = CONFIG['viewport']
 
+CHUNK_SIZE = CONFIG['world']['chunk_size_x'], CONFIG['world']['chunk_size_y']
+
 MAX_STACK_SIZE = CONFIG['max_stack_size']
 TILE_SIZE = 32
 
