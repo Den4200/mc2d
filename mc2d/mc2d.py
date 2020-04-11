@@ -1,9 +1,11 @@
 import arcade
 
-from mc2d.player import Player
-from mc2d.grid import Grid
-from mc2d.inventory import Inventory
-from mc2d.world import World
+from mc2d.core import (
+    Grid,
+    Inventory,
+    Player,
+    World
+)
 from mc2d.config import (
     GRAVITY,
     VIEWPORT,

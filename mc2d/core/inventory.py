@@ -1,6 +1,6 @@
 import arcade
 
-from mc2d.world import Block
+from mc2d.core.world import Block
 from mc2d.config import (
     BLOCK_PATHS,
     INVENTORY,
