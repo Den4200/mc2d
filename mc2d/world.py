@@ -130,7 +130,7 @@ class TreeGenerator:
 
     def setup(self):
         self._generate_random_distance()
-        self.one(5, 0, 0)
+        self.one(6, 0, 0)
 
     def _generate_random_distance(self):
         if self.tree_distance is None:
