@@ -43,13 +43,15 @@ INVENTORY = UI / 'inventory.png'
 TREE_SHAPES = json.loads((ASSETS / 'tree_shapes.json').read_text())
 
 BLOCK_PATHS = {
+    'dirt': str(ASSETS / 'dirt.png'),
     'grass': str(GRASS / 'grass_2.png'),
     'oak_wood': str(WOOD / 'oak_wood.png'),
     'oak_leaves': str(LEAVES / 'oak_leaves.png')
 }
 
 BLOCK_IDS = {
-    1: 'grass',
-    2: 'oak_wood',
-    3: 'oak_leaves'
+    1: 'dirt',
+    2: 'grass',
+    3: 'oak_wood',
+    4: 'oak_leaves'
 }
