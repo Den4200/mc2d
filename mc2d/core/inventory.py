@@ -1,6 +1,5 @@
 import arcade
 
-from mc2d.core.world import Block
 from mc2d.config import (
     BLOCK_PATHS,
     INVENTORY,
@@ -10,6 +9,7 @@ from mc2d.config import (
     TILE_SIZE,
     WINDOW_SIZE
 )
+from mc2d.utils import Block
 
 
 class Inventory(arcade.Sprite):
@@ -28,31 +28,7 @@ class Inventory(arcade.Sprite):
         self.selected_item = None
 
     def setup(self):
-        # here until more advanced map generation
-        for idx, sprite_info in enumerate(BLOCK_PATHS.items()):
-            sprite_name, sprite_path = sprite_info
-
-            sprite = Block(
-                filename=sprite_path,
-                scale=SCALING,
-                center_x=self.center_x,
-                center_y=self.top + 12 - int(TILE_SIZE * SCALING * (idx + 1)) - (idx * 13),
-                name=sprite_name,
-                amount=64
-            )
-            self.inv_sprites.append(sprite)
-            self.block_amounts.append(
-                arcade.draw_text(
-                    str(sprite.amount),
-                    sprite.center_x + int(TILE_SIZE * SCALING) - (24 * SCALING),
-                    sprite.center_y - int(TILE_SIZE * SCALING) + (24 * SCALING),
-                    arcade.color.WHITE,
-                    font_size=10 * SCALING + idx * 0.01,  # weird arcade cache.. uses the same instance
-                    bold=True                             # https://arcade.academy/_modules/arcade/text.html#draw_text
-                )
-            )
-
-        for i in range(len(BLOCK_PATHS), 5):
+        for i in range(5):
             sprite = Block(
                 filename=str(SELECTION_BOX),
                 scale=SCALING,

@@ -2,23 +2,18 @@ import random
 
 import arcade
 
+from mc2d.core.generators import (
+    MapGenerator,
+    TreeGenerator
+)
 from mc2d.config import (
     BLOCK_IDS,
     BLOCK_PATHS,
     GRASS,
     SCALING,
-    TILE_SIZE,
-    TREE_SHAPES
+    TILE_SIZE
 )
-
-
-class Block(arcade.Sprite):
-
-    def __init__(self, name, amount=1, cycle_idx=0, **kwargs):
-        super().__init__(**kwargs)
-        self.name = name
-        self.amount = amount
-        self.cycle_idx = cycle_idx
+from mc2d.utils import Block
 
 
 class World:
@@ -29,6 +24,7 @@ class World:
         self.ground_list = list()
         self.block_list = arcade.SpriteList()
 
+        self.map_generator = MapGenerator(ctx)
         self.tree_generator = TreeGenerator(ctx)
 
     def setup(self):
@@ -119,63 +115,3 @@ class World:
 
         elif self.ground_list[-1].right - int(TILE_SIZE * SCALING) > viewport['right']:
             self.block_list.remove(self.ground_list.pop(-1))
-
-
-class TreeGenerator:
-
-    def __init__(self, ctx):
-        self.ctx = ctx
-        self.trees = list()
-        self.tree_distance = None
-
-    def setup(self):
-        self._generate_random_distance()
-        self.one(6, 0, 0)
-
-    def _generate_random_distance(self):
-        if self.tree_distance is None:
-            self.tree_distance = random.randrange(16, 41, 8)
-
-    def one(self, offset_x_blocks, offset_y_blocks, idx):
-        tree_shape = random.choice(TREE_SHAPES)
-
-        if self.trees:
-            offset_x = offset_x_blocks * int(TILE_SIZE * SCALING) + self.trees[idx][0]
-            offset_y = offset_y_blocks * int(TILE_SIZE * SCALING) + self.trees[idx][1]
-        else:
-            offset_x = offset_x_blocks * int(TILE_SIZE * SCALING) + int(TILE_SIZE * SCALING) // 2
-            offset_y = offset_y_blocks * int(TILE_SIZE * SCALING) + int(TILE_SIZE * SCALING) // 2
-
-        self.ctx.world.block_list.extend((
-            Block(
-                scale=SCALING,
-                name=BLOCK_IDS[tree_shape[y][x]],
-                filename=BLOCK_PATHS[BLOCK_IDS[tree_shape[y][x]]],
-                center_x=x * int(TILE_SIZE * SCALING) + offset_x,
-                center_y=(len(tree_shape) - y) * int(TILE_SIZE * SCALING) + offset_y
-            ) for x in range(len(tree_shape[0])) for y in range(len(tree_shape)) if tree_shape[y][x] != 0
-        ))
-
-        base_tree_pos = (
-            (len(tree_shape[0]) // 2 + 1) * int(TILE_SIZE * SCALING) + offset_x,
-            offset_y
-        )
-
-        if idx == -1:
-            self.trees.append(base_tree_pos)
-        else:
-            self.trees.insert(idx, base_tree_pos)
-
-    def update(self, direction):
-        self._generate_random_distance()
-        detect_range = 12 * int(TILE_SIZE * SCALING)
-
-        if direction == 'left':
-            if self.ctx.player.center_x < self.trees[0][0] + detect_range:
-                self.one(-self.tree_distance, 0, 0)
-                self.tree_distance = None
-
-        elif direction == 'right':
-            if self.trees[-1][0] - detect_range < self.ctx.player.center_x:
-                self.one(self.tree_distance, 0, -1)
-                self.tree_distance = None
