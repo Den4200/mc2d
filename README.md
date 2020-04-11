@@ -8,4 +8,4 @@ This is a 2D version of Minecraft! This game is currently under major developmen
 - Player pathfinding
 - Dynamic map generation (grass and trees)
 
-[![Splash Screen](https://imgur.com/a/zWOIGAd)](https://imgur.com/a/zWOIGAd)
+<img src="https://i.imgur.com/yqkgIOW.png">
