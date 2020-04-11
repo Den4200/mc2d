@@ -41,30 +41,7 @@ class MapGenerator:
                             chunk[y][x + layer_left_pos] = self.DIRT_ID
 
         chunk[:-4] = list(reversed(chunk[:-4]))
-
-        grass_count = 0
-        run = True
-        for y in range(size_y):
-
-            if not run:
-                break
-
-            for x in range(size_x):
-
-                if grass_count == size_x:
-                    run = False
-                    break
-
-                if chunk[y][x] != 0:
-
-                    if y == 0:
-                        chunk[y][x] = self.GRASS_ID
-                        grass_count += 1
-
-                    # Check to make sure there is not grass or dirt above
-                    elif chunk[y - 1][x] not in (self.DIRT_ID, self.GRASS_ID):
-                        chunk[y][x] = self.GRASS_ID
-                        grass_count += 1
+        chunk = self._grassify_chunk(size_x, size_y, chunk)
 
         if side == 'left':
             self.chunks.insert(0, chunk)
@@ -72,6 +49,23 @@ class MapGenerator:
             self.chunks.append(chunk)
 
         return chunk
+
+    def _grassify_chunk(self, size_x, size_y, chunk):
+        grass_count = 0
+        run = True
+
+        for y in range(size_y):
+            for x in range(size_x):
+
+                if grass_count == size_x:
+                    return chunk
+
+                if chunk[y][x] != 0:
+
+                                 # Check to make sure there is not grass or dirt above
+                    if y == 0 or chunk[y - 1][x] not in (self.DIRT_ID, self.GRASS_ID):
+                        chunk[y][x] = self.GRASS_ID
+                        grass_count += 1
 
 
 if __name__ == '__main__':
