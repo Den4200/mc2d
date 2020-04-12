@@ -121,10 +121,18 @@ class MapGenerator:
 
         for i in range(tree_amount):
             tree_shape = random.choice(TREE_SHAPES)
-            spacing += random.randrange(4, 8, random.randint(1, 2))
+
+            min_spacing = 4
+            max_spacing = tree_amount * _space
+            if max_spacing == 4:
+                max_spacing += 1
+
+            spacing += random.randint(min_spacing, max_spacing)
 
             tree_y = self.chunk_size_y - 1
             while True:
+
+                # Raise the tree until it's not in the ground
                 if chunk[tree_y][spacing] != 0:
                     tree_y -= 1
                 else:
@@ -133,12 +141,14 @@ class MapGenerator:
             for y, _ in enumerate(tree_shape):
                 for x, _ in enumerate(tree_shape[y]):
 
+                    # Empty space
                     if tree_shape[y][x] == 0:
                         continue
 
-                    chunk[tree_y - (len(tree_shape) - y - 1)][spacing + x - 1] = tree_shape[y][x]
+                    chunk[tree_y - (len(tree_shape) - y - 1)][spacing + x - 3] = tree_shape[y][x]
 
+                    # Make the blocks underneath the tree dirt
                     if y == len(tree_shape) - 1 and tree_shape[-1][x] != 0:
-                        chunk[tree_y - (len(tree_shape) - y - 2)][spacing + x - 1] = self.DIRT_ID
+                        chunk[tree_y - (len(tree_shape) - y - 2)][spacing + x - 3] = self.DIRT_ID
 
         return chunk
