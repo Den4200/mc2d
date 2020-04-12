@@ -7,67 +7,7 @@ from mc2d.config import (
     TILE_SIZE,
     TREE_SHAPES
 )
-from mc2d.utils import Block
-
-
-class TreeGenerator:
-
-    def __init__(self, ctx):
-        self.ctx = ctx
-        self.trees = list()
-        self.tree_distance = None
-
-    def setup(self):
-        self._generate_random_distance()
-        self.one(6, 0, 0)
-
-    def _generate_random_distance(self):
-        if self.tree_distance is None:
-            self.tree_distance = random.randrange(16, 41, 8)
-
-    def one(self, offset_x_blocks, offset_y_blocks, idx):
-        tree_shape = random.choice(TREE_SHAPES)
-
-        if self.trees:
-            offset_x = offset_x_blocks * int(TILE_SIZE * SCALING) + self.trees[idx][0]
-            offset_y = offset_y_blocks * int(TILE_SIZE * SCALING) + self.trees[idx][1]
-        else:
-            offset_x = offset_x_blocks * int(TILE_SIZE * SCALING) + int(TILE_SIZE * SCALING) // 2
-            offset_y = offset_y_blocks * int(TILE_SIZE * SCALING) + int(TILE_SIZE * SCALING) // 2
-
-        self.ctx.world.block_list.extend((
-            Block(
-                scale=SCALING,
-                name=BLOCK_IDS[tree_shape[y][x]],
-                filename=BLOCK_PATHS[BLOCK_IDS[tree_shape[y][x]]],
-                center_x=x * int(TILE_SIZE * SCALING) + offset_x,
-                center_y=(len(tree_shape) - y) * int(TILE_SIZE * SCALING) + offset_y
-            ) for x in range(len(tree_shape[0])) for y in range(len(tree_shape)) if tree_shape[y][x] != 0
-        ))
-
-        base_tree_pos = (
-            (len(tree_shape[0]) // 2 + 1) * int(TILE_SIZE * SCALING) + offset_x,
-            offset_y
-        )
-
-        if idx == -1:
-            self.trees.append(base_tree_pos)
-        else:
-            self.trees.insert(idx, base_tree_pos)
-
-    def update(self, direction):
-        self._generate_random_distance()
-        detect_range = 12 * int(TILE_SIZE * SCALING)
-
-        if direction == 'left':
-            if self.ctx.player.center_x < self.trees[0][0] + detect_range:
-                self.one(-self.tree_distance, 0, 0)
-                self.tree_distance = None
-
-        elif direction == 'right':
-            if self.trees[-1][0] - detect_range < self.ctx.player.center_x:
-                self.one(self.tree_distance, 0, -1)
-                self.tree_distance = None
+from mc2d.utils import find_grid_box, Block
 
 
 class MapGenerator:
@@ -84,14 +24,48 @@ class MapGenerator:
         self.DIRT_ID = 1
         self.GRASS_ID = 2
 
+        self.tree_generator = TreeGenerator(ctx)
+
     def setup(self):
         self.generate_chunk('right')
 
+    def find_chunk(self, x, y):
+        chunk_top = self.chunk_size_y * int(TILE_SIZE * SCALING) + int(TILE_SIZE * SCALING) // 2
+        chunk_bottom = int(TILE_SIZE * SCALING) + int(TILE_SIZE * SCALING) // 2
+
+        for idx, chunk in enumerate(self.chunks):
+            chunk_left = self.chunk_pos_x[idx]
+            chunk_right = chunk_left + self.chunk_size_x * int(TILE_SIZE * SCALING)
+
+            if chunk_left <= x <= chunk_right and chunk_bottom <= y <= chunk_top:
+                return {
+                    'chunk': chunk,
+                    'top': chunk_top,
+                    'bottom': chunk_bottom,
+                    'left': chunk_left,
+                    'right': chunk_right,
+                    'index': idx
+                }
+
+    def find_chunk_block_coords(self, x, y, chunk_info):
+        block = find_grid_box(x, y)
+
+        for y in range(self.chunk_size_y):
+            for x in range(self.chunk_size_x):
+                x_coord = x * int(TILE_SIZE * SCALING) + chunk_info['left']
+                y_coord = y * int(TILE_SIZE * SCALING) + chunk_info['bottom']
+
+                chunk_block = find_grid_box(x_coord, y_coord)
+
+                if block[0] == chunk_block[0] and block[1] == chunk_block[1]:
+                    print('find_chunk_block_coords:', x_coord, y_coord)
+                    return x, y
+
     def generate_chunk(self, side):
-        chunk = [[0 for _ in range(self.chunk_size_x)]for i in range(self.chunk_size_y)]
+        chunk = [[0 for _ in range(self.chunk_size_x)] for i in range(self.chunk_size_y)]
 
         # Set the bottom floor
-        for y in range(1, 5):
+        for y in range(1, self.chunk_size_y // 2):
             for x in range(self.chunk_size_x):
                 chunk[-y][x] = 1
 
@@ -118,7 +92,7 @@ class MapGenerator:
                         ):
                             chunk[y][x + layer_left_pos] = self.DIRT_ID
 
-        chunk[:-4] = list(reversed(chunk[:-4]))
+        chunk[:-(self.chunk_size_y // 2) + 1] = list(reversed(chunk[:-(self.chunk_size_y // 2) + 1]))
         chunk = self._grassify(chunk)
 
         if side == 'left':
@@ -155,7 +129,7 @@ class MapGenerator:
 
         if side == 'left':
             self.chunk_pos_x.insert(0, offset_x)
-        elif side =='right':
+        elif side == 'right':
             self.chunk_pos_x.append(offset_x)
 
     def _grassify(self, chunk):
@@ -173,3 +147,75 @@ class MapGenerator:
                     if y == 0 or chunk[y - 1][x] not in (self.DIRT_ID, self.GRASS_ID):
                         chunk[y][x] = self.GRASS_ID
                         grass_count += 1
+
+
+class TreeGenerator:
+
+    def __init__(self, ctx):
+        self.ctx = ctx
+        self.tree_pos_x = list()
+        self.tree_distance = None
+
+    def setup(self):
+        self._generate_random_distance()
+        self.one(4, 0)
+
+    def _generate_random_distance(self):
+        if self.tree_distance is None:
+            self.tree_distance = random.randrange(8, 17, 4)
+
+    def one(self, offset_x_blocks, idx):
+        tree_shape = random.choice(TREE_SHAPES)
+        scaled_tile = int(TILE_SIZE * SCALING)
+
+        if self.tree_pos_x:
+            offset_x = offset_x_blocks * scaled_tile + self.tree_pos_x[idx]
+        else:
+            offset_x = offset_x_blocks * scaled_tile + scaled_tile // 2
+
+        base_tree_x = (len(tree_shape[0]) // 2 + 1) * scaled_tile + offset_x
+        offset_y = scaled_tile + scaled_tile // 2
+
+        chunk = self.ctx.world.map_generator.find_chunk(*find_grid_box(base_tree_x, offset_y))
+        chunk_block_x, chunk_block_y = self.ctx.world.map_generator.find_chunk_block_coords(
+            base_tree_x,
+            offset_y,
+            chunk
+        )
+
+        while True:
+            print(self.ctx.world.map_generator.chunks[chunk['index']][chunk_block_y][chunk_block_x])
+            if self.ctx.world.map_generator.chunks[chunk['index']][chunk_block_y][chunk_block_x] != 0:
+                offset_y += scaled_tile
+                chunk_block_y += 1
+            else:
+                break
+
+        self.ctx.world.block_list.extend((
+            Block(
+                scale=SCALING,
+                name=BLOCK_IDS[tree_shape[y][x]],
+                filename=BLOCK_PATHS[BLOCK_IDS[tree_shape[y][x]]],
+                center_x=x * scaled_tile + offset_x,
+                center_y=(len(tree_shape) - y) * scaled_tile + offset_y
+            ) for x in range(len(tree_shape[0])) for y in range(len(tree_shape)) if tree_shape[y][x] != 0
+        ))
+
+        if idx == -1:
+            self.tree_pos_x.append(base_tree_x)
+        else:
+            self.tree_pos_x.insert(idx, base_tree_x)
+
+    def update(self, side):
+        self._generate_random_distance()
+        detect_range = 12 * int(TILE_SIZE * SCALING)
+
+        if side == 'left':
+            if self.ctx.player.center_x < self.tree_pos_x[0] + detect_range:
+                self.one(-self.tree_distance, 0)
+                self.tree_distance = None
+
+        elif side == 'right':
+            if self.tree_pos_x[-1] - detect_range < self.ctx.player.center_x:
+                self.one(self.tree_distance, -1)
+                self.tree_distance = None

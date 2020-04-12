@@ -24,7 +24,7 @@ class World:
 
     def setup(self):
         self.map_generator.setup()
-        # self.tree_generator.setup()
+        self.tree_generator.setup()
 
     def draw(self):
         self.block_list.draw()
@@ -70,6 +70,8 @@ class World:
 
         if top_left_x[0] > viewport['left']:
             self.map_generator.generate_chunk('left')
+            self.tree_generator.update('left')
 
         elif top_left_x[-1] + chunk_size < viewport['right']:
             self.map_generator.generate_chunk('right')
+            self.tree_generator.update('right')

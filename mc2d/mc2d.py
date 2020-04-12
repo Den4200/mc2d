@@ -61,6 +61,7 @@ class Mc2d(arcade.View):
 
     def on_mouse_press(self, x, y, button, modifiers):
         if button in (arcade.MOUSE_BUTTON_LEFT, arcade.MOUSE_BUTTON_RIGHT):
+            print('mouse:', x, y)
             self.grid.selection = (x, y, button)
 
     def on_update(self, delta_time):
