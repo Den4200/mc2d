@@ -1,9 +1,6 @@
 import arcade
 
-from mc2d.core.generators import (
-    MapGenerator,
-    TreeGenerator
-)
+from mc2d.core.generators import MapGenerator
 from mc2d.config import (
     BLOCK_PATHS,
     CHUNK_SIZE,
@@ -20,11 +17,9 @@ class World:
         self.block_list = arcade.SpriteList()
 
         self.map_generator = MapGenerator(ctx, *CHUNK_SIZE)
-        self.tree_generator = TreeGenerator(ctx)
 
     def setup(self):
         self.map_generator.setup()
-        self.tree_generator.setup()
 
     def draw(self):
         self.block_list.draw()
@@ -70,8 +65,6 @@ class World:
 
         if top_left_x[0] > viewport['left']:
             self.map_generator.generate_chunk('left')
-            self.tree_generator.update('left')
 
         elif top_left_x[-1] + chunk_size < viewport['right']:
             self.map_generator.generate_chunk('right')
-            self.tree_generator.update('right')
