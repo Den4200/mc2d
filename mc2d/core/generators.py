@@ -24,8 +24,6 @@ class MapGenerator:
         self.DIRT_ID = 1
         self.GRASS_ID = 2
 
-        self.tree_generator = TreeGenerator(ctx)
-
     def setup(self):
         self.generate_chunk('right')
 
@@ -38,6 +36,7 @@ class MapGenerator:
             chunk_right = chunk_left + self.chunk_size_x * int(TILE_SIZE * SCALING)
 
             if chunk_left <= x <= chunk_right and chunk_bottom <= y <= chunk_top:
+                print('find_chunk:', chunk_left, chunk_right, chunk_bottom, chunk_top)
                 return {
                     'chunk': chunk,
                     'top': chunk_top,
@@ -59,9 +58,12 @@ class MapGenerator:
 
                 if block[0] == chunk_block[0] and block[1] == chunk_block[1]:
                     print('find_chunk_block_coords:', x_coord, y_coord)
+                    print('find_chunk_block_coords:', x, y)
+                    print('find_chunk_block_coords:', self.chunks[chunk_info['index']][y][x])
                     return x, y
 
     def generate_chunk(self, side):
+        print('[ spawn chunk ]')
         chunk = [[0 for _ in range(self.chunk_size_x)] for i in range(self.chunk_size_y)]
 
         # Set the bottom floor
@@ -184,7 +186,6 @@ class TreeGenerator:
         )
 
         while True:
-            print(self.ctx.world.map_generator.chunks[chunk['index']][chunk_block_y][chunk_block_x])
             if self.ctx.world.map_generator.chunks[chunk['index']][chunk_block_y][chunk_block_x] != 0:
                 offset_y += scaled_tile
                 chunk_block_y += 1
