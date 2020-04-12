@@ -1,7 +1,6 @@
 import arcade
 
 from mc2d.config import (
-    BLOCK_PATHS,
     INVENTORY,
     MAX_STACK_SIZE,
     SCALING,

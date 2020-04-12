@@ -1,12 +1,12 @@
 import arcade
 
-from mc2d.mc2d import Mc2d
 from mc2d.config import (
     MAIN_MENU_BG,
     PLAY_BUTTON_PRESSED,
     PLAY_BUTTON_RELEASED,
     WINDOW_SIZE
 )
+from mc2d.mc2d import Mc2d
 
 
 class PlayButton(arcade.gui.TextButton):

@@ -5,9 +5,9 @@ from mc2d.core.player import Player
 from mc2d.core.world import World
 
 __all__ = (
-    'MapGenerator',
     'Grid',
     'Inventory',
+    'MapGenerator',
     'Player',
     'World'
 )

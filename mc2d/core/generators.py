@@ -7,7 +7,7 @@ from mc2d.config import (
     TILE_SIZE,
     TREE_SHAPES
 )
-from mc2d.utils import find_grid_box, Block
+from mc2d.utils import Block
 
 
 class MapGenerator:

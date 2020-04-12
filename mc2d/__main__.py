@@ -1,11 +1,11 @@
 import arcade
 
-from mc2d.main_menu import MainMenu
 from mc2d.config import (
     FULLSCREEN,
     TITLE,
     WINDOW_SIZE
 )
+from mc2d.main_menu import MainMenu
 
 
 def main():

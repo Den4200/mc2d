@@ -1,12 +1,12 @@
 import arcade
 
-from mc2d.core.generators import MapGenerator
 from mc2d.config import (
     BLOCK_PATHS,
     CHUNK_SIZE,
     SCALING,
     TILE_SIZE
 )
+from mc2d.core.generators import MapGenerator
 from mc2d.utils import Block
 
 
