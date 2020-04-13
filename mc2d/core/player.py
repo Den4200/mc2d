@@ -15,10 +15,10 @@ class Player(arcade.Sprite):
 
     def __init__(self, ctx, **kwargs):
         super().__init__(
-            str(PLAYER / 'idle.png'),
-            scale=SCALING,
-            center_x=PLAYER_SIZE[0] * SCALING,
-            center_y=PLAYER_SIZE[1] * SCALING // 2 + TILE_SIZE * SCALING + 1024
+            kwargs.get('filename', str(PLAYER / 'idle.png')),
+            scale=kwargs.get('scale', SCALING),
+            center_x=kwargs.get('center_x', PLAYER_SIZE[0] * SCALING),
+            center_y=kwargs.get('center_y', PLAYER_SIZE[1] * SCALING // 2 + TILE_SIZE * SCALING + 1024)
         )
         self.filename = kwargs.get('filename', str(PLAYER / 'idle.png'))
 

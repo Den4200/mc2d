@@ -46,6 +46,9 @@ class Mc2d(arcade.View):
         self.player = Player(self)
         self.player.setup()
 
+        self.post_setup()
+
+    def post_setup(self):
         self.physics_engine = arcade.PhysicsEnginePlatformer(
             self.player, self.world.block_list, GRAVITY
         )

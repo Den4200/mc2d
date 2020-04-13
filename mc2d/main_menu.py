@@ -40,7 +40,7 @@ class LoadWorldButton(arcade.gui.TextButton):
 
     def on_release(self):
         if self.pressed:
-            self.ctx.play()
+            self.ctx.load_world()
             self.pressed = False
 
 
@@ -107,11 +107,14 @@ class MainMenu(arcade.View):
         self.window.show_view(mc2d)
 
     def load_world(self):
+        self.window.button_list.remove(self.new_world_button)
+        self.window.button_list.remove(self.load_world_button)
+
         factory = Factory()
         with open('saves/test.json', 'r') as f:
             factory.load(f, self)
 
-        factory.mc2d.setup()
+        factory.mc2d.post_setup()
 
         self.window.show_view(factory.mc2d)
 
