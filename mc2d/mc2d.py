@@ -52,6 +52,12 @@ class Mc2d(arcade.View):
         self.physics_engine = arcade.PhysicsEnginePlatformer(
             self.player, self.world.block_list, GRAVITY
         )
+        arcade.set_viewport(
+            self.view_left,
+            WINDOW_SIZE[0] + self.view_left,
+            self.view_bottom,
+            WINDOW_SIZE[1] + self.view_bottom
+        )
 
     def on_draw(self):
         arcade.start_render()
