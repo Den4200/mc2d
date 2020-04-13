@@ -80,6 +80,13 @@ class Mc2d(arcade.View):
             with open('saves/test.json', 'w') as f:
                 factory.dump(f)
 
+            arcade.set_viewport(
+                0,
+                WINDOW_SIZE[0],
+                0,
+                WINDOW_SIZE[1]
+            )
+
             self.window.show_view(self.menu)
             self.menu.setup()
 

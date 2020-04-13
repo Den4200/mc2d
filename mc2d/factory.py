@@ -16,6 +16,9 @@ class Factory:
 	def dump(self, fp):
 		json.dump(self.serialize(), fp)
 
+	def purge(self):
+		pass
+
 	def serialize(self):
 		return {
 			'Mc2d': {

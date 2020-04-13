@@ -145,10 +145,18 @@ class MapGenerator:
                     if tree_shape[y][x] == 0:
                         continue
 
-                    chunk[tree_y - (len(tree_shape) - y - 1)][spacing + x - 3] = tree_shape[y][x]
+                    try:
+                        chunk[tree_y - (len(tree_shape) - y - 1)][spacing + x - 3] = tree_shape[y][x]
 
-                    # Make the blocks underneath the tree dirt
-                    if y == len(tree_shape) - 1 and tree_shape[-1][x] != 0:
-                        chunk[tree_y - (len(tree_shape) - y - 2)][spacing + x - 3] = self.DIRT_ID
+                    except IndexError:
+                        print('Tree at the edge of a chunk')
+
+                    try:
+                        # Make the blocks underneath the tree dirt
+                        if y == len(tree_shape) - 1 and tree_shape[-1][x] != 0:
+                            chunk[tree_y - (len(tree_shape) - y - 2)][spacing + x - 3] = self.DIRT_ID
+
+                    except IndexError:
+                        pass
 
         return chunk
