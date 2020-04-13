@@ -20,6 +20,8 @@ class Player(arcade.Sprite):
             center_x=PLAYER_SIZE[0] * SCALING,
             center_y=PLAYER_SIZE[1] * SCALING // 2 + TILE_SIZE * SCALING + 1024
         )
+        self.filename = str(PLAYER / 'idle.png')
+
         self.ctx = ctx
         self.destination = None
         self.button = None

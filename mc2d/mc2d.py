@@ -11,12 +11,15 @@ from mc2d.config import (
     VIEWPORT,
     WINDOW_SIZE
 )
+from mc2d.factory import Factory
 
 
 class Mc2d(arcade.View):
 
-    def __init__(self) -> None:
+    def __init__(self, menu) -> None:
         super().__init__()
+
+        self.menu = menu
 
         self.world = None
         self.grid = None
@@ -62,6 +65,23 @@ class Mc2d(arcade.View):
     def on_mouse_press(self, x, y, button, modifiers):
         if button in (arcade.MOUSE_BUTTON_LEFT, arcade.MOUSE_BUTTON_RIGHT):
             self.grid.selection = (x, y, button)
+
+    def on_key_release(self, key, modifiers):
+        if key == arcade.key.ESCAPE:
+            factory = Factory(
+                mc2d=self,
+                map_generator=self.world.map_generator,
+                grid=self.grid,
+                inventory=self.inventory,
+                player=self.player,
+                world=self.world
+            )
+
+            with open('saves/test.json', 'w') as f:
+                factory.dump(f)
+
+            self.window.show_view(self.menu)
+            self.menu.setup()
 
     def on_update(self, delta_time):
         self.physics_engine.update()

@@ -8,6 +8,8 @@ class Block(arcade.Sprite):
     def __init__(self, name, amount=1, cycle_idx=0, **kwargs):
         super().__init__(**kwargs)
 
+        self.filename = kwargs['filename']
+
         self.name = name
         self.amount = amount
         self.cycle_idx = cycle_idx

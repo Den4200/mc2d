@@ -64,4 +64,4 @@ class MainMenu(arcade.View):
 
     def play(self):
         self.window.button_list.remove(self.play_button)
-        self.window.show_view(Mc2d())
+        self.window.show_view(Mc2d(self))
