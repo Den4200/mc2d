@@ -12,14 +12,14 @@ from mc2d.utils import Block
 
 class MapGenerator:
 
-    def __init__(self, ctx, chunk_size_x, chunk_size_y):
+    def __init__(self, ctx, chunk_size_x, chunk_size_y, **kwargs):
         self.ctx = ctx
 
         self.chunk_size_x = chunk_size_x
         self.chunk_size_y = chunk_size_y
 
-        self.chunks = list()
-        self.chunk_pos_x = list()
+        self.chunks = kwargs.get('chunks', list())
+        self.chunk_pos_x = kwargs.get('chunk_pos_x', list())
 
         self.DIRT_ID = 1
         self.GRASS_ID = 2

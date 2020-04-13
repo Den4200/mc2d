@@ -1,11 +1,21 @@
 import json
 
-from mc2d.config import SELECTION_BOX
+import arcade
+
+from mc2d.config import SCALING, SELECTION_BOX, TILE_SIZE
+from mc2d.core import (
+	Grid,
+	Inventory,
+	MapGenerator,
+	Player,
+	World
+)
+from mc2d.utils import Block
 
 
 class Factory:
 
-	def __init__(self, mc2d, map_generator, grid, inventory, player, world):
+	def __init__(self, mc2d=None, map_generator=None, grid=None, inventory=None, player=None, world=None):
 		self.mc2d = mc2d
 		self.map_generator = map_generator
 		self.grid = grid
@@ -16,8 +26,64 @@ class Factory:
 	def dump(self, fp):
 		json.dump(self.serialize(), fp)
 
-	def purge(self):
-		pass
+	def load(self, fp, menu):
+		save = json.load(fp)
+
+		self.mc2d = Mc2d(menu, **save['Mc2d'])
+
+		self.map_generator = MapGenerator(self.mc2d, **save['MapGenerator'])
+
+		self.grid = Grid(
+			self.mc2d,
+			selection=save['Grid']['selection'],
+			should_not_check=save['Grid']['should_not_check']
+		)
+
+		for box_spec in save['Grid']['boxes']:
+			self.grid.boxes.append(
+				arcade.Sprite(**box_spec)
+			)
+
+		self.inventory = Inventory(self.mc2d)
+
+		for idx, inv_sprite_spec in enumerate(save['Inventory']['inv_sprites']):
+			self.inventory.inv_sprites.append(
+				Block(**inv_sprite_spec)
+			)
+			self.inventory.block_amounts.append(
+				arcade.draw_text(
+					str(inv_sprite_spec['amount']),
+					inv_sprite_spec['center_x'] + int(TILE_SIZE * SCALING) - (24 * SCALING),
+					inv_sprite_spec['center_y'] - int(TILE_SIZE * SCALING) + (24 * SCALING),
+					arcade.color.WHITE,
+	                font_size=10 * SCALING + idx * 0.01,
+	                bold=True
+				)
+			)
+
+		self.inventory.selected_item = arcade.Sprite(
+			**{
+				spec_name: spec for spec_name, spec in save['Inventory']['selected_item'].items()
+				if spec_name != 'index'
+			}
+		)
+		self.inventory.selected_item.index = save['Inventory']['selected_item']['index']
+
+		self.player = Player(self.mc2d, **save['Player'])
+		
+		self.world = World(self.mc2d)
+
+		for block_spec in save['World']['block_list']:
+			self.world.block_list.append(
+				Block(**block_spec)
+			)
+
+		self.world.map_generator = self.map_generator
+
+		self.mc2d.world = self.world
+		self.mc2d.grid = self.grid
+		self.mc2d.player = self.player
+		self.mc2d.inventory = self.inventory
 
 	def serialize(self):
 		return {

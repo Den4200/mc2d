@@ -6,10 +6,10 @@ from mc2d.utils import find_grid_box
 
 class Grid:
 
-    def __init__(self, ctx):
+    def __init__(self, ctx, **kwargs):
         self.ctx = ctx
-        self.selection = None
-        self.should_not_check = False
+        self.selection = kwargs.get('selection', None)
+        self.should_not_check = kwargs.get('should_not_check', False)
         self.boxes = arcade.SpriteList()
 
     def draw(self):

@@ -13,22 +13,22 @@ from mc2d.utils import find_grid_box
 
 class Player(arcade.Sprite):
 
-    def __init__(self, ctx):
+    def __init__(self, ctx, **kwargs):
         super().__init__(
             str(PLAYER / 'idle.png'),
             scale=SCALING,
             center_x=PLAYER_SIZE[0] * SCALING,
             center_y=PLAYER_SIZE[1] * SCALING // 2 + TILE_SIZE * SCALING + 1024
         )
-        self.filename = str(PLAYER / 'idle.png')
+        self.filename = kwargs.get('filename', str(PLAYER / 'idle.png'))
 
         self.ctx = ctx
-        self.destination = None
-        self.button = None
+        self.destination = kwargs.get('destination', None)
+        self.button = kwargs.get('button', None)
 
         self.MAX_ATTEMPTS = 12
-        self.prev_coords = list()
-        self.just_started = True
+        self.prev_coords = kwargs.get('prev_coords', list())
+        self.just_started = kwargs.get('just_started', True)
 
     def setup(self):
         pass

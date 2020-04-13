@@ -1,22 +1,21 @@
 import arcade
 
+from mc2d.config import (
+    GRAVITY,
+    VIEWPORT,
+    WINDOW_SIZE
+)
 from mc2d.core import (
     Grid,
     Inventory,
     Player,
     World
 )
-from mc2d.config import (
-    GRAVITY,
-    VIEWPORT,
-    WINDOW_SIZE
-)
-from mc2d.factory import Factory
 
 
 class Mc2d(arcade.View):
 
-    def __init__(self, menu) -> None:
+    def __init__(self, menu, **kwargs) -> None:
         super().__init__()
 
         self.menu = menu
@@ -29,12 +28,10 @@ class Mc2d(arcade.View):
 
         self.physics_engine = None
 
-        self.view_bottom = 0
-        self.view_left = 0
+        self.view_bottom = kwargs.get('view_bottom', 0)
+        self.view_left = kwargs.get('view_left', 0)
 
         arcade.set_background_color(arcade.csscolor.CORNFLOWER_BLUE)
-
-        self.setup()
 
     def setup(self):
         self.world = World(self)
@@ -68,7 +65,7 @@ class Mc2d(arcade.View):
 
     def on_key_release(self, key, modifiers):
         if key == arcade.key.ESCAPE:
-            factory = Factory(
+            self.menu.save(
                 mc2d=self,
                 map_generator=self.world.map_generator,
                 grid=self.grid,
@@ -76,9 +73,6 @@ class Mc2d(arcade.View):
                 player=self.player,
                 world=self.world
             )
-
-            with open('saves/test.json', 'w') as f:
-                factory.dump(f)
 
             arcade.set_viewport(
                 0,

@@ -6,6 +6,7 @@ from mc2d.config import (
     PLAY_BUTTON_RELEASED,
     WINDOW_SIZE
 )
+from mc2d.factory import Factory
 from mc2d.mc2d import Mc2d
 
 
@@ -64,4 +65,13 @@ class MainMenu(arcade.View):
 
     def play(self):
         self.window.button_list.remove(self.play_button)
-        self.window.show_view(Mc2d(self))
+
+        mc2d = Mc2d(self)
+        mc2d.setup()
+
+        self.window.show_view(mc2d)
+
+    def save(self, **kwargs):
+        factory = Factory(**kwargs)
+        with open('saves/test.json', 'w') as f:
+            factory.dump(f)
