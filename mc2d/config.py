@@ -39,6 +39,12 @@ UI = ASSETS / 'ui'
 PLAY_BUTTON_RELEASED = UI / 'play_button_released.png'
 PLAY_BUTTON_PRESSED = UI / 'play_button_pressed.png'
 
+NEW_WORLD_BUTTON_RELEASED = UI / 'new_world_button_released.png'
+NEW_WORLD_BUTTON_PRESSED = UI / 'new_world_button_pressed.png'
+
+LOAD_WORLD_BUTTON_RELEASED = UI / 'load_world_button_released.png'
+LOAD_WORLD_BUTTON_PRESSED = UI / 'load_world_button_pressed.png'
+
 SELECTION_BOX = UI / 'selection_box.png'
 INVENTORY = UI / 'inventory.png'
 
